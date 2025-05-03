@@ -37,4 +37,7 @@ public class EmailDto
 
     public string? Remarks { get; set; }   
     #endregion
+    
+    public bool IsHtml { get; set; } = false;
+
 }

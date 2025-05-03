@@ -1,4 +1,5 @@
 using LibraryEcom.Application.Common.User;
+using LibraryEcom.Application.DTOs.Email;
 using LibraryEcom.Application.DTOs.Order;
 using LibraryEcom.Application.DTOs.User;
 using LibraryEcom.Application.Exceptions;
@@ -6,12 +7,21 @@ using LibraryEcom.Application.Interfaces.Repositories.Base;
 using LibraryEcom.Application.Interfaces.Services;
 using LibraryEcom.Domain.Entities;
 using LibraryEcom.Domain.Entities.Identity;
+using MailKit;
+using System.Globalization;
+using Microsoft.AspNetCore.Hosting;
+
 
 namespace LibraryEcom.Infrastructure.Implementation.Services;
 
 public class OrderService(IGenericRepository genericRepository,
-    ICurrentUserService currentUserService) : IOrderService
+    ICurrentUserService currentUserService,
+    IEmailService emailService,
+    IWebHostEnvironment env) : IOrderService
+
+
 {
+    
     public List<OrderDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null)
     {
         var orders = genericRepository.GetPagedResult<Order>(
@@ -93,50 +103,38 @@ public class OrderService(IGenericRepository genericRepository,
     public Guid PlaceOrder()
     {
         var userId = currentUserService.GetUserId;
-
-        var user = genericRepository.GetById<User>(userId)
-                   ?? throw new NotFoundException("User not found");
+        var user = genericRepository.GetById<User>(userId) ?? throw new NotFoundException("User not found");
 
         var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
-
         if (!cartItems.Any())
             throw new BadRequestException("Cart is empty.", new[] { "No items found in the cart." });
 
-        var previousOrders = genericRepository
-            .Get<Order>(x => x.UserId == userId, includeProperties: "OrderItems")
-            .ToList();
+        var previousOrders = genericRepository.Get<Order>(
+            x => x.UserId == userId && x.Status == "Completed", includeProperties: "OrderItems").ToList();
 
-        var orderedBookIds = previousOrders
-            .SelectMany<Order, OrderItem>(o => o.OrderItems)
-            .Select(oi => oi.BookId)
-            .ToList();
+        var orderedBookIds = previousOrders.SelectMany(o => o.OrderItems).Select(oi => oi.BookId).ToList();
 
-        var discountPercentage = previousOrders.Count > 10
-            ? 10
-            : orderedBookIds.Count > 5
-                ? 5
-                : 0;
+        var discountPercentage = 0;
+        if (orderedBookIds.Count >= 5) discountPercentage += 5;
+        if (previousOrders.Count >= 10) discountPercentage += 10;
 
         var orderItems = new List<OrderItem>();
-
         foreach (var cart in cartItems)
         {
-            var book = genericRepository.GetById<Book>(cart.BookId)
-                       ?? throw new NotFoundException("Book not found");
-
+            var book = genericRepository.GetById<Book>(cart.BookId) ?? throw new NotFoundException("Book not found");
             orderItems.Add(new OrderItem
             {
                 Id = Guid.NewGuid(),
                 BookId = book.Id,
                 Quantity = cart.Quantity,
                 UnitPrice = book.BasePrice,
-                OrderId = Guid.Empty // Will assign below
+                OrderId = Guid.Empty
             });
         }
 
         var subtotal = orderItems.Sum(i => i.UnitPrice * i.Quantity);
         var discountAmount = subtotal * discountPercentage / 100;
-        var grandTotal = subtotal - discountAmount;
+        var claimCode = $"CLM-{Guid.NewGuid().ToString("N")[..8].ToUpper()}";
 
         var order = new Order
         {
@@ -146,8 +144,9 @@ public class OrderService(IGenericRepository genericRepository,
             Status = "Pending",
             Subtotal = subtotal,
             DiscountAmount = discountAmount,
-            LoyaltyDiscountAmount = 0,
-            TotalAmount = grandTotal,
+            TotalAmount = subtotal - discountAmount,
+            ClaimCode = claimCode,
+            ClaimExpiry = DateTime.UtcNow.AddDays(7),
             IsClaimed = false
         };
 
@@ -161,8 +160,31 @@ public class OrderService(IGenericRepository genericRepository,
 
         genericRepository.RemoveMultipleEntity(cartItems);
 
+        // Load and parse email template
+        var templatePath = Path.Combine(env.WebRootPath, "email-templates", "ClaimCodeTemplate.html");
+        var template = File.ReadAllText(templatePath);
+
+        var body = template
+            .Replace("{{FullName}}", user.Name)
+            .Replace("{{OrderId}}", order.Id.ToString())
+            .Replace("{{ClaimCode}}", claimCode)
+            .Replace("{{ClaimExpiry}}", order.ClaimExpiry?.ToString("yyyy-MM-dd") ?? "");
+
+
+        var email = new EmailDto
+        {
+            ToEmailAddress = user.Email,
+            FullName = user.Name,
+            Subject = "📦 Your Order & Claim Code | LibraVerse",
+            Body = body,
+            IsHtml = true
+        };
+
+        emailService.SendEmail(email);
+
         return orderId;
     }
+
 
     public void CancelOrder(Guid orderId)
     {

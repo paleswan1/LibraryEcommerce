@@ -58,7 +58,7 @@ public class OrderService(IGenericRepository genericRepository,
             TotalAmount = dto.TotalAmount,
             ClaimCode = dto.ClaimCode,
             ClaimExpiry = dto.ClaimExpiry,
-            IsClaimed = dto.
+            IsClaimed = false,
         };
 
         genericRepository.Insert(order);

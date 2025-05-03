@@ -42,3 +42,25 @@ C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Migrators.PostgreSQL\obj\Debu
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\refint\LibraryEcom.Migrators.PostgreSQL.dll
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.pdb
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\ref\LibraryEcom.Migrators.PostgreSQL.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.deps.json
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Application.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Domain.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Helper.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Infrastructure.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Application.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Domain.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Helper.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\bin\Debug\net8.0\LibraryEcom.Infrastructure.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.csproj.AssemblyReference.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.AssemblyInfoInputs.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.AssemblyInfo.cs
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.csproj.CoreCompileInputs.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.sourcelink.json
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryE.707C6886.Up2Date
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\refint\LibraryEcom.Migrators.PostgreSQL.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\LibraryEcom.Migrators.PostgreSQL.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Migrators.PostgreSQL\obj\Debug\net8.0\ref\LibraryEcom.Migrators.PostgreSQL.dll

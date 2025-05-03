@@ -30,3 +30,19 @@ C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Application\obj\Debug\net8.0\
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Application\obj\Debug\net8.0\refint\LibraryEcom.Application.dll
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.pdb
 C:\Users\Acer\Desktop\Universal - Copy\LibraryEcom.Application\obj\Debug\net8.0\ref\LibraryEcom.Application.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\bin\Debug\net8.0\LibraryEcom.Application.deps.json
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\bin\Debug\net8.0\LibraryEcom.Application.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\bin\Debug\net8.0\LibraryEcom.Application.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\bin\Debug\net8.0\LibraryEcom.Domain.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\bin\Debug\net8.0\LibraryEcom.Domain.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.csproj.AssemblyReference.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.AssemblyInfoInputs.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.AssemblyInfo.cs
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.csproj.CoreCompileInputs.cache
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.sourcelink.json
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryE.9431A4BF.Up2Date
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\refint\LibraryEcom.Application.dll
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\LibraryEcom.Application.pdb
+C:\Users\Acer\Desktop\Ecommerce\LibraryEcommerce\LibraryEcom.Application\obj\Debug\net8.0\ref\LibraryEcom.Application.dll

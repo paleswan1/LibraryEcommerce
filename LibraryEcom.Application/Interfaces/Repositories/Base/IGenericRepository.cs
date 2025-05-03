@@ -42,5 +42,8 @@ public interface IGenericRepository: ITransientService
     void Delete<TEntity>(object id) where TEntity : class;
     
     void Delete<TEntity>(TEntity entity) where TEntity : class;
+    
+    void RemoveMultipleEntity<TEntity>(IEnumerable<TEntity> removeEntityList) where TEntity : class;
+
     #endregion
 }

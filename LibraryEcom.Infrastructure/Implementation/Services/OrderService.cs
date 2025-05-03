@@ -160,7 +160,6 @@ public class OrderService(IGenericRepository genericRepository,
 
         genericRepository.RemoveMultipleEntity(cartItems);
 
-        // Load and parse email template
         var templatePath = Path.Combine(env.WebRootPath, "email-templates", "ClaimCodeTemplate.html");
         var template = File.ReadAllText(templatePath);
 

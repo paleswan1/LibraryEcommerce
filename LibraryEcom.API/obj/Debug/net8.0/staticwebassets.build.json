@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "FH/0uozR7dsJ/5RjjaAIrWpKmSoUND4ca/eyPFV2R78=",
+  "Source": "LibraryEcom.API",
+  "BasePath": "_content/LibraryEcom.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "LibraryEcom.API\\wwwroot",
+      "Source": "LibraryEcom.API",
+      "ContentRoot": "C:\\Users\\Acer\\Desktop\\Universal - Copy\\LibraryEcom.API\\wwwroot\\",
+      "BasePath": "_content/LibraryEcom.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Acer\\Desktop\\Universal - Copy\\LibraryEcom.API\\wwwroot\\email-templates\\SelfRegistration.html",
+      "SourceId": "LibraryEcom.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Acer\\Desktop\\Universal - Copy\\LibraryEcom.API\\wwwroot\\",
+      "BasePath": "_content/LibraryEcom.API",
+      "RelativePath": "email-templates/SelfRegistration.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\email-templates\\SelfRegistration.html"
+    }
+  ]
+}

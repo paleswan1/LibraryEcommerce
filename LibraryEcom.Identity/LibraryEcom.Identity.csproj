@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>LibraryEcom.Identity</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LibraryEcom.Application\LibraryEcom.Application.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Domain\LibraryEcom.Domain.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Helper\LibraryEcom.Helper.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Infrastructure\LibraryEcom.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.1.1" />
+      <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.1.1" />
+      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.1" />
+    </ItemGroup>
+
+</Project>

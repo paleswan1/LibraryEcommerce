@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Acer\\Desktop\\Universal - Copy\\LibraryEcom.API\\wwwroot\\email-templates\\SelfRegistration.html",
+      "PackagePath": "staticwebassets\\email-templates\\SelfRegistration.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.LibraryEcom.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.LibraryEcom.API.props",
+      "PackagePath": "build\\LibraryEcom.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.LibraryEcom.API.props",
+      "PackagePath": "buildMultiTargeting\\LibraryEcom.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.LibraryEcom.API.props",
+      "PackagePath": "buildTransitive\\LibraryEcom.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

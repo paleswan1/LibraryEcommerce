@@ -30,10 +30,6 @@ public static class IdentityServices
             ? databaseSettings.NpgSqlConnectionString
             : databaseSettings.SqlServerConnectionString;
 
-        Console.WriteLine(connectionString);
-        
-        Console.WriteLine(databaseSettings.DbProvider);
-        
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseDatabase(databaseSettings.DbProvider, connectionString!);

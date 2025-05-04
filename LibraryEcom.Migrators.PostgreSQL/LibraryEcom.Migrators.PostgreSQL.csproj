@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\Application\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LibraryEcom.Application\LibraryEcom.Application.csproj" />
       <ProjectReference Include="..\LibraryEcom.Domain\LibraryEcom.Domain.csproj" />
       <ProjectReference Include="..\LibraryEcom.Helper\LibraryEcom.Helper.csproj" />

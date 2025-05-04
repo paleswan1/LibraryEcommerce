@@ -1,6 +1,8 @@
+using LibraryEcom.Application.Common.Service;
+
 namespace LibraryEcom.Application.Interfaces.Services;
 
-public interface INotificationsClient
+public interface INotificationsClient : IScopedService
 {
     Task ReceiveNotification(string message);
     

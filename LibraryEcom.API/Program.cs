@@ -1,14 +1,11 @@
 using LibraryEcom.Middleware;
-using LibraryEcom.Domain.Common;
 using LibraryEcom.Configurations;
 using LibraryEcom.Identity.Dependency;
 using System.Text.Json.Serialization;
 using System.IdentityModel.Tokens.Jwt;
 using LibraryEcom.Domain.Common.Property;
 using LibraryEcom.Infrastructure.Dependency;
-using LibraryEcom.Infrastructure.Persistence;
 using Swashbuckle.AspNetCore.SwaggerUI;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,14 +28,14 @@ services.AddIdentityServices(configuration);
 
 services.AddInfrastructureService(configuration); 
 
-
 await services.AddDataSeedMigrationService(); 
+
+services.AddSignalR();
 
 services.AddCustomSwaggerGen();
 
 // Log.Logger = new LoggerConfiguration()
 //     .ReadFrom.Configuration(builder.Configuration).CreateLogger();
-
 
 var app = builder.Build();
 

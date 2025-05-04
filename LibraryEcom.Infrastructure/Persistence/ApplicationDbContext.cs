@@ -164,11 +164,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(ba => ba.AuthorId);
 
         builder.Entity<OrderItem>()
-            .HasOne(oi => oi.Order)
-            .WithMany()
-            .HasForeignKey(oi => oi.OrderId);
-
-        builder.Entity<OrderItem>()
             .HasOne(oi => oi.Book)
             .WithMany()
             .HasForeignKey(oi => oi.BookId);

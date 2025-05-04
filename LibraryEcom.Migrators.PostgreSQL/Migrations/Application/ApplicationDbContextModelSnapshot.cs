@@ -244,6 +244,9 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("BookId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -265,10 +268,15 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("CreatedBy");
 
@@ -952,6 +960,12 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
 
             modelBuilder.Entity("LibraryEcom.Domain.Entities.Cart", b =>
                 {
+                    b.HasOne("LibraryEcom.Domain.Entities.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LibraryEcom.Domain.Entities.Identity.User", "CreatedUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -971,6 +985,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
 
                     b.Navigation("CreatedUser");
 
@@ -1156,7 +1172,7 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                         .HasForeignKey("LastModifiedBy");
 
                     b.HasOne("LibraryEcom.Domain.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1254,6 +1270,11 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                 {
                     b.Navigation("Discount")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LibraryEcom.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

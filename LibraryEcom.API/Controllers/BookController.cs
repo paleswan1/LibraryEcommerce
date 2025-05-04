@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LibraryCom.Controllers;
 
 [Route("api/book")]
+[ApiController]
 public class BookController(IBookService bookService) : BaseController<BookController>
 {
     [HttpGet]
@@ -23,15 +24,15 @@ public class BookController(IBookService bookService) : BaseController<BookContr
         });
     }
 
-    [HttpGet("all")]
-    public IActionResult GetAll(string? search = null)
+    [HttpGet("list")]
+    public IActionResult GetList(string? search = null)
     {
         var books = bookService.GetAll(search);
 
         return Ok(new ResponseDto<List<BookDto>>
         {
             StatusCode = (int)HttpStatusCode.OK,
-            Message = "All books retrieved successfully.",
+            Message = "Book list retrieved successfully.",
             Result = books
         });
     }
@@ -50,9 +51,9 @@ public class BookController(IBookService bookService) : BaseController<BookContr
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateBookDto dto)
+    public IActionResult Create([FromBody] CreateBookDto bookDto)
     {
-        bookService.Create(dto);
+        bookService.Create(bookDto);
 
         return Ok(new ResponseDto<bool>
         {
@@ -63,9 +64,9 @@ public class BookController(IBookService bookService) : BaseController<BookContr
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult Update(Guid id, [FromBody] UpdateBookDto dto)
+    public IActionResult Update(Guid id, [FromBody] UpdateBookDto bookDto)
     {
-        bookService.Update(id, dto);
+        bookService.Update(id, bookDto);
 
         return Ok(new ResponseDto<bool>
         {

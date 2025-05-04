@@ -30,6 +30,10 @@ public static class IdentityServices
             ? databaseSettings.NpgSqlConnectionString
             : databaseSettings.SqlServerConnectionString;
 
+        Console.WriteLine(connectionString);
+        
+        Console.WriteLine(databaseSettings.DbProvider);
+        
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseDatabase(databaseSettings.DbProvider, connectionString!);
@@ -65,9 +69,23 @@ public static class IdentityServices
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.Audience = configuration["JwtSettings:Audience"];
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for the SignalR hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notifications"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -80,6 +98,7 @@ public static class IdentityServices
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"] ?? string.Empty)),
                 };
             });
+
 
         services.AddAuthorization();
 

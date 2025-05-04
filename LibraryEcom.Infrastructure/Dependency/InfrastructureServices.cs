@@ -72,7 +72,8 @@ public static class InfrastructureServices
                     builder.WithOrigins(baseUrls)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowCredentials()
+                        .SetIsOriginAllowed(_ => true);
                 });
         });
     }

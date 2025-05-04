@@ -11,68 +11,75 @@ namespace LibraryEcom.Infrastructure.Implementation.Services;
 
 public class BookService(IGenericRepository genericRepository) : IBookService
 {
-    public List<BookDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null)
+    public List<BookDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null, bool? isActive = null)
     {
         var books = genericRepository.GetPagedResult<Book>(
-                pageNumber,
-                pageSize,
-                out rowCount,
-                x => string.IsNullOrEmpty(search)
-                    || x.Title.ToLower().Contains(search.ToLower())
-                    || x.Description.ToLower().Contains(search.ToLower()))
-            .ToList();
+            pageNumber,
+            pageSize,
+            out rowCount,
+            x => (string.IsNullOrEmpty(search)
+                 || x.Title.ToLower().Contains(search.ToLower())
+                 || x.Description.ToLower().Contains(search.ToLower()))
+                 && (isActive == null || x.IsAvailable == isActive))
+        .ToList();
 
-        var bookIds = books.Select(b => b.Id).ToList();
+    var bookIds = books.Select(b => b.Id).ToList();
 
-        var bookAuthors = genericRepository.Get<BookAuthor>(ba => bookIds.Contains(ba.BookId))
-            .Include(ba => ba.Author)
-            .ToList();
+    var bookAuthors = genericRepository.Get<BookAuthor>(ba => bookIds.Contains(ba.BookId))
+        .Include(ba => ba.Author)
+        .ToList();
 
-        var bookDtos = new List<BookDto>();
+    var bookDtos = new List<BookDto>();
 
-        foreach (var book in books)
-        {
-            var authors = bookAuthors
-                .Where(ba => ba.BookId == book.Id)
-                .Select(ba => new AuthorDto
-                {
-                    Id = ba.Author.Id,
-                    Name = ba.Author.Name,
-                    Biography = ba.Author.Biography,
-                    BirthDate = ba.Author.BirthDate
-                }).ToList();
-
-            bookDtos.Add(new BookDto
+    foreach (var book in books)
+    {
+        var authors = bookAuthors
+            .Where(ba => ba.BookId == book.Id)
+            .Select(ba => new AuthorDto
             {
-                Id = book.Id,
-                PublisherId = book.PublisherId,
-                ISBN = book.ISBN,
-                Title = book.Title,
-                Description = book.Description,
-                BookFormat = book.BookFormat,
-                PublicationDate = book.PublicationDate,
-                Genre = book.Genre,
-                BasePrice = book.BasePrice,
-                PageCount = book.PageCount,
-                Language = book.Language,
-                IsAvailable = book.IsAvailable,
-                Discount = book.Discount != null
-                    ? new DiscountDto
-                    {
-                        Id = book.Discount.Id,
-                        BookId = book.Discount.BookId,
-                        DiscountPercentage = book.Discount.DiscountPercentage,
-                        StartDate = book.Discount.StartDate,
-                        EndDate = book.Discount.EndDate,
-                        IsActive = book.Discount.IsActive,
-                        IsSaleFlag = book.Discount.IsSaleFlag
-                    }
-                    : null,
-                Authors = authors
-            });
-        }
+                Id = ba.Author.Id,
+                Name = ba.Author.Name,
+                Biography = ba.Author.Biography,
+                BirthDate = ba.Author.BirthDate
+            }).ToList();
 
-        return bookDtos;
+        bookDtos.Add(new BookDto
+        {
+            Id = book.Id,
+            PublisherId = book.PublisherId,
+            ISBN = book.ISBN,
+            Title = book.Title,
+            Description = book.Description,
+            BookFormat = book.BookFormat,
+            PublicationDate = book.PublicationDate,
+            Genre = book.Genre,
+            BasePrice = book.BasePrice,
+            PageCount = book.PageCount,
+            Language = book.Language,
+            IsAvailable = book.IsAvailable,
+            Discount = book.Discount != null
+                ? new DiscountDto
+                {
+                    Id = book.Discount.Id,
+                    BookId = book.Discount.BookId,
+                    DiscountPercentage = book.Discount.DiscountPercentage,
+                    StartDate = book.Discount.StartDate,
+                    EndDate = book.Discount.EndDate,
+                    IsActive = book.Discount.IsActive,
+                    IsSaleFlag = book.Discount.IsSaleFlag
+                }
+                : null,
+            Authors = authors
+        });
+    }
+
+    return bookDtos;
+    }
+
+    public List<BookDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null, bool? isActive = null,
+        string? sortBy = null, bool isDescending = false)
+    {
+        throw new NotImplementedException();
     }
 
     public List<BookDto> GetAll(string? search = null)

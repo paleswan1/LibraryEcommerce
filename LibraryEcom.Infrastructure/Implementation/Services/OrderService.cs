@@ -9,15 +9,17 @@ using LibraryEcom.Domain.Entities;
 using LibraryEcom.Domain.Entities.Identity;
 using MailKit;
 using System.Globalization;
+using LibraryEcom.Application.Hubs;
 using Microsoft.AspNetCore.Hosting;
-
+using Microsoft.AspNetCore.SignalR;
 
 namespace LibraryEcom.Infrastructure.Implementation.Services;
 
 public class OrderService(IGenericRepository genericRepository,
     ICurrentUserService currentUserService,
     IEmailService emailService,
-    IWebHostEnvironment env) : IOrderService
+    IWebHostEnvironment env,
+    IHubContext<NotificationsHub,INotificationsClient> hubContext) : IOrderService
 
 
 {
@@ -100,7 +102,7 @@ public class OrderService(IGenericRepository genericRepository,
         genericRepository.Delete(order);
     }
 
-    public Guid PlaceOrder()
+    public async Task<Guid> PlaceOrder()
     {
         var userId = currentUserService.GetUserId;
         var user = genericRepository.GetById<User>(userId) ?? throw new NotFoundException("User not found");
@@ -180,8 +182,28 @@ public class OrderService(IGenericRepository genericRepository,
         };
 
         emailService.SendEmail(email);
+        
+        var orderedBookTitles = orderItems
+            .Select(i => genericRepository.GetById<Book>(i.BookId)?.Title)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .ToList();
 
+        await hubContext.Clients.User(userId.ToString())
+            .ReceiveNotification($"📦 Hi {user.Name}, your order has been placed successfully for: {string.Join(", ", orderedBookTitles)}");
         return orderId;
+    }
+
+    public void FulfillOrderByClaimCode(string claimCode)
+    {
+        var order = genericRepository.GetFirstOrDefault<Order>(x =>
+                        x.ClaimCode == claimCode && !x.IsClaimed && x.Status == "Pending")
+                    ?? throw new NotFoundException("Invalid or already claimed code.");
+
+        order.IsClaimed = true;
+        order.Status = "Completed";
+        order.CompletionDate = DateTime.UtcNow;
+
+        genericRepository.Update(order);
     }
 
 

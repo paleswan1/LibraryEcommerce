@@ -16,7 +16,10 @@ public interface IOrderService : ITransientService
     void Update(Guid id, UpdateOrderDto dto);
 
     void Delete(Guid id);
-    
-    Guid PlaceOrder();
+
+    Task<Guid> PlaceOrder();
+
+    public void FulfillOrderByClaimCode(string claimCode);
+
     void CancelOrder(Guid orderId);
 }

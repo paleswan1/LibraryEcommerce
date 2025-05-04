@@ -6,7 +6,7 @@ namespace LibraryEcom.Application.Interfaces.Services;
 
 public interface IBookService: ITransientService
 {
-    List<BookDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null);
+    List<BookDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null, bool? isActive = null);
     
     List<BookDto> GetAll(string? search = null);
     

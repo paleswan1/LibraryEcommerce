@@ -343,7 +343,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception("Error saving book: " + ex.InnerException?.Message ?? ex.Message);
+                throw new Exception("Error saving book" + ex.InnerException?.Message ?? ex.Message);
             }
 
         }

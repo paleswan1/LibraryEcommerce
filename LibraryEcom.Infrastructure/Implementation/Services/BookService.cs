@@ -257,7 +257,7 @@
         public BookDto? GetById(Guid id)
         {
             var book = genericRepository.GetById<Book>(id)
-                       ?? throw new NotFoundException("Book not found");
+                       ?? throw new NotFoundException("Book not found.");
 
             var bookAuthors = genericRepository.Get<BookAuthor>(ba => ba.BookId == id)
                 .Include(ba => ba.Author)

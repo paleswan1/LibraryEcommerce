@@ -1,6 +1,7 @@
 using LibraryEcom.Application.Common.Service;
 using LibraryEcom.Application.DTOs.Book;
 using LibraryEcom.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace LibraryEcom.Application.Interfaces.Services;
 
@@ -13,6 +14,9 @@ public interface IBookService: ITransientService
     BookDto? GetById(Guid id);
 
     void Create(CreateBookDto dto);
+    
+    string UploadImage(IFormFile file);
+    void DeleteImage(string fileName);
 
     void Update(Guid id, UpdateBookDto dto);
 

@@ -42,9 +42,9 @@ public static class ExtensionMethod
         return DateTime.UtcNow;
     }
     
-    public static string ToFormattedDate(this DateOnly dateOnly)
+    public static string ToFormattedDate(this DateTime DateTime)
     {
-        return dateOnly.ToString("dd.MM.yyyy");
+        return DateTime.ToString("dd.MM.yyyy");
     }
     
     public static string ToFormattedTime(this TimeSpan timeSpan)

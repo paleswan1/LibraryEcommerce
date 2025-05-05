@@ -54,7 +54,7 @@ public static class SwaggerConfiguration
                     }, value }
             });
 
-            c.MapType<DateOnly>(() => new OpenApiSchema
+            c.MapType<DateTime>(() => new OpenApiSchema
             {
                 Type = "string",
                 Format = "date"

@@ -53,7 +53,7 @@ public class BookController(IBookService bookService) : BaseController<BookContr
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] CreateBookDto bookDto)
+    public IActionResult Create([FromForm] CreateBookDto bookDto)
     {
         bookService.Create(bookDto);
 

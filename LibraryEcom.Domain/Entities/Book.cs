@@ -1,5 +1,7 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using LibraryEcom.Domain.Common.Base;
 using LibraryEcom.Domain.Common.Enum;
+using Microsoft.AspNetCore.Http;
 
 namespace LibraryEcom.Domain.Entities;
 
@@ -28,6 +30,7 @@ public class Book: BaseEntity<Guid>
     
     public bool IsAvailable { get; set; }
     
+    public string? CoverImage { get; set; }
     
     public virtual ICollection<Discount> Discount { get; set; } = [];
     

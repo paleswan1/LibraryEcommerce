@@ -1,6 +1,7 @@
 using LibraryEcom.Application.DTOs.Discounts;
 using LibraryEcom.Domain.Common.Enum;
 using LibraryEcom.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace LibraryEcom.Application.DTOs.Book;
 
@@ -20,11 +21,9 @@ public class CreateBookDto
     
     public  BookFormat BookFormat { get; set; } 
     
-    public DateTime PublicationDate { get; set; }
+    public DateOnly PublicationDate { get; set; }
     
     public Genre Genre { get; set; } 
-    
-    public string CoverImage { get; set; } = string.Empty;
     
     public decimal BasePrice { get; set; }
     
@@ -34,5 +33,8 @@ public class CreateBookDto
     
     public bool IsAvailable { get; set; }
     
-    public BookAuthor Author { get; set; }
+    public IFormFile? CoverImage { get; set; }
+
+    
+    // public BookAuthor Author { get; set; }
 }

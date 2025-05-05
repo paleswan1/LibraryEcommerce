@@ -8,5 +8,5 @@ public class AuthorDto
 
     public string Biography { get; set; } = string.Empty;
 
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 }

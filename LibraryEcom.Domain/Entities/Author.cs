@@ -8,6 +8,6 @@ public class Author: BaseEntity<Guid>
     
     public string Biography { get; set; }
 
-    public DateTime BirthDate { get; set; } = DateTime.UtcNow;
+    public DateOnly BirthDate { get; set; }
     
 }

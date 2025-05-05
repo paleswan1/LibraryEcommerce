@@ -25,8 +25,6 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
                 BookId = discount.BookId,
                 DiscountPercentage = discount.DiscountPercentage,
                 StartDate = discount.StartDate,
-                EndDate = discount.EndDate,
-                IsActive = discount.IsActive,
                 IsSaleFlag = discount.IsSaleFlag
             });
         }
@@ -46,7 +44,6 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
             DiscountPercentage = discount.DiscountPercentage,
             StartDate = discount.StartDate,
             EndDate = discount.EndDate,
-            IsActive = discount.IsActive,
             IsSaleFlag = discount.IsSaleFlag
         };
     }
@@ -100,8 +97,12 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
 
     public List<DiscountDto> GetActiveDiscounts()
     {
-        var now = DateTime.UtcNow;
-        var discounts = genericRepository.Get<Discount>(x => x.IsActive && x.StartDate <= now && x.EndDate >= now).ToList();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var discounts = genericRepository
+            .Get<Discount>(x => x.IsActive && x.StartDate <= today && x.EndDate >= today)
+            .ToList();
+
 
         return discounts.Select(d => new DiscountDto
         {
@@ -110,7 +111,6 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
             DiscountPercentage = d.DiscountPercentage,
             StartDate = d.StartDate,
             EndDate = d.EndDate,
-            IsActive = d.IsActive,
             IsSaleFlag = d.IsSaleFlag
         }).ToList();
     }

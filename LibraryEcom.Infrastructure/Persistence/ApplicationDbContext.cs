@@ -151,17 +151,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         #region Mappings
 
-        builder.Entity<BookAuthor>().HasKey(ba => new { ba.BookId, ba.AuthorId });
+        builder.Entity<BookAuthor>()
+            .HasKey(ba => new { ba.BookId, ba.AuthorId });
 
         builder.Entity<BookAuthor>()
             .HasOne(ba => ba.Book)
-            .WithMany()
-            .HasForeignKey(ba => ba.BookId);
+            .WithMany(b => b.BookAuthors) 
+            .HasForeignKey(ba => ba.BookId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<BookAuthor>()
             .HasOne(ba => ba.Author)
             .WithMany()
-            .HasForeignKey(ba => ba.AuthorId);
+            .HasForeignKey(ba => ba.AuthorId)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
         builder.Entity<OrderItem>()
             .HasOne(oi => oi.Book)

@@ -3,6 +3,7 @@ using System;
 using LibraryEcom.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505120731_DbUpdateBook")]
+    partial class DbUpdateBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,8 +83,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -204,6 +207,9 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("BookId1")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -231,6 +237,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.HasKey("BookId", "AuthorId");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("BookId1");
 
                     b.HasIndex("CreatedBy");
 
@@ -370,8 +378,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Property<decimal>("DiscountPercentage")
                         .HasColumnType("numeric");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -385,8 +393,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -930,10 +938,14 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                         .IsRequired();
 
                     b.HasOne("LibraryEcom.Domain.Entities.Book", "Book")
-                        .WithMany("BookAuthors")
+                        .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LibraryEcom.Domain.Entities.Book", null)
+                        .WithMany("BookAuthors")
+                        .HasForeignKey("BookId1");
 
                     b.HasOne("LibraryEcom.Domain.Entities.Identity.User", "CreatedUser")
                         .WithMany()

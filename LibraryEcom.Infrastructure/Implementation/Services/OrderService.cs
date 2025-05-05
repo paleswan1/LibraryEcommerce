@@ -176,7 +176,7 @@ public class OrderService(IGenericRepository genericRepository,
         {
             ToEmailAddress = user.Email,
             FullName = user.Name,
-            Subject = "📦 Your Order & Claim Code | LibraVerse",
+            Subject = "📦 Your Order & Claim Code ",
             Body = body,
             IsHtml = true
         };

@@ -3,6 +3,7 @@ using LibraryEcom.Configurations;
 using LibraryEcom.Identity.Dependency;
 using System.Text.Json.Serialization;
 using System.IdentityModel.Tokens.Jwt;
+using LibraryEcom.Application.Hubs;
 using LibraryEcom.Domain.Common.Property;
 using LibraryEcom.Infrastructure.Dependency;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -78,5 +79,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<NotificationsHub>("/notifications");
 
 app.Run();

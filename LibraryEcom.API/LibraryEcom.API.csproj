@@ -33,6 +33,10 @@
     </ItemGroup>
 
 <!--    <ItemGroup>-->
+<!--      <Content Include="wwwroot\email-templates\ClaimCodeTemplate.html" />-->
+<!--    </ItemGroup>-->
+
+<!--    <ItemGroup>-->
 <!--      <Content Include="wwwroot\email-templates\SelfRegistration.html" />-->
 <!--    </ItemGroup>-->
 

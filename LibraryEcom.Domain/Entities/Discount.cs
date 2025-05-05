@@ -10,8 +10,10 @@ public class Discount: BaseEntity<Guid>
     
     public decimal DiscountPercentage { get; set; }
     
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime StartDate { get; set; }
-    
+
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime EndDate { get; set; }
     
     public bool IsActive { get; set; }

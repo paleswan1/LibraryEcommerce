@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Your LibraVerse Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 40px;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .code-box {
+            background-color: #f1f1f1;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #2e7d32;
+        }
+        .footer {
+            font-size: 12px;
+            margin-top: 30px;
+            color: #888;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Hello {{FullName}},</h2>
+        <p>Thanks for your order at <strong>LibraVerse</strong>! 🎉</p>
+    </div>
+    <p><strong>Order ID:</strong> {{OrderId}}</p>
+    <p>Your special claim code is:</p>
+    <div class="code-box">{{ClaimCode}}</div>
+    <p>This code is valid until: <strong>{{ClaimExpiry}}</strong></p>
+    <p>Please use it before the expiry date to enjoy your benefits.</p>
+    <div class="footer">
+        <p>&copy; 2025 LibraVerse. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

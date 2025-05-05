@@ -1,8 +1,9 @@
+using LibraryEcom.Application.Common.Service;
 using LibraryEcom.Application.DTOs.Cart;
 
 namespace LibraryEcom.Application.Interfaces.Services;
 
-public interface ICartService
+public interface ICartService: ITransientService
 {
     List<CartDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null);
 

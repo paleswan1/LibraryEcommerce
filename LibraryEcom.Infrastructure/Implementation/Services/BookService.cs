@@ -28,6 +28,7 @@ public class BookService(IGenericRepository genericRepository) : IBookService
     var bookAuthors = genericRepository.Get<BookAuthor>(ba => bookIds.Contains(ba.BookId))
         .Include(ba => ba.Author)
         .ToList();
+    
 
     var bookDtos = new List<BookDto>();
 
@@ -57,18 +58,18 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             PageCount = book.PageCount,
             Language = book.Language,
             IsAvailable = book.IsAvailable,
-            Discount = book.Discount != null
-                ? new DiscountDto
-                {
-                    Id = book.Discount.Id,
-                    BookId = book.Discount.BookId,
-                    DiscountPercentage = book.Discount.DiscountPercentage,
-                    StartDate = book.Discount.StartDate,
-                    EndDate = book.Discount.EndDate,
-                    IsActive = book.Discount.IsActive,
-                    IsSaleFlag = book.Discount.IsSaleFlag
-                }
-                : null,
+            // Discount = book.Discount != null
+            //     ? new DiscountDto
+            //     {
+            //         Id = book.Discount.Id,
+            //         BookId = book.Discount.BookId,
+            //         DiscountPercentage = book.Discount.DiscountPercentage,
+            //         StartDate = book.Discount.StartDate,
+            //         EndDate = book.Discount.EndDate,
+            //         IsActive = book.Discount.IsActive,
+            //         IsSaleFlag = book.Discount.IsSaleFlag
+            //     }
+            //     : null,
             Authors = authors
         });
     }
@@ -127,18 +128,18 @@ public class BookService(IGenericRepository genericRepository) : IBookService
                 PageCount = book.PageCount,
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
-                Discount = discount != null
-                    ? new DiscountDto
-                    {
-                        Id = book.Discount.Id,
-                        BookId = book.Discount.BookId,
-                        DiscountPercentage = book.Discount.DiscountPercentage,
-                        StartDate = book.Discount.StartDate,
-                        EndDate = book.Discount.EndDate,
-                        IsActive = book.Discount.IsActive,
-                        IsSaleFlag = book.Discount.IsSaleFlag
-                    }
-                    : null,
+                // Discount = discount != null
+                //     ? new DiscountDto
+                //     {
+                //         Id = book.Discount.Id,
+                //         BookId = book.Discount.BookId,
+                //         DiscountPercentage = book.Discount.DiscountPercentage,
+                //         StartDate = book.Discount.StartDate,
+                //         EndDate = book.Discount.EndDate,
+                //         IsActive = book.Discount.IsActive,
+                //         IsSaleFlag = book.Discount.IsSaleFlag
+                //     }
+                //     : null,
                 Authors = authors
             });
         }
@@ -177,24 +178,28 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             PageCount = book.PageCount,
             Language = book.Language,
             IsAvailable = book.IsAvailable,
-            Discount = book.Discount != null
-                ? new DiscountDto
-                {
-                    Id = book.Discount.Id,
-                    BookId = book.Discount.BookId,
-                    DiscountPercentage = book.Discount.DiscountPercentage,
-                    StartDate = book.Discount.StartDate,
-                    EndDate = book.Discount.EndDate,
-                    IsActive = book.Discount.IsActive,
-                    IsSaleFlag = book.Discount.IsSaleFlag
-                }
-                : null,
+            // Discount = book.Discount != null
+            //     ? new DiscountDto
+            //     {
+            //         Id = book.Discount.Id,
+            //         BookId = book.Discount.BookId,
+            //         DiscountPercentage = book.Discount.DiscountPercentage,
+            //         StartDate = book.Discount.StartDate,
+            //         EndDate = book.Discount.EndDate,
+            //         IsActive = book.Discount.IsActive,
+            //         IsSaleFlag = book.Discount.IsSaleFlag
+            //     }
+            //     : null,
             Authors = authors
         };
     }
 
     public void Create(CreateBookDto dto)
     {
+        var authors = genericRepository
+            .Get<Author>(x => dto.AuthorIds.Contains(x.Id))
+            .ToList();
+        
         var book = new Book
         {
             Id = Guid.NewGuid(),
@@ -208,10 +213,15 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             BasePrice = dto.BasePrice,
             PageCount = dto.PageCount,
             Language = dto.Language,
-            IsAvailable = dto.IsAvailable
+            IsAvailable = dto.IsAvailable,
+            BookAuthors = authors.Select(x => new BookAuthor()
+            {
+                AuthorId = x.Id,
+            }).ToList()
         };
 
         genericRepository.Insert(book);
+        
     }
 
     public void Update(Guid id, UpdateBookDto dto)

@@ -30,6 +30,7 @@ public class CartService(
 
             return new CartDto
             {
+                Id = cart.Id,
                 Book = new BookDto
                 {
                     Id = book.Id,

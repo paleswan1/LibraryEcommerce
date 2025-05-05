@@ -10,6 +10,8 @@ public class CreateBookDto
 
     public Guid PublisherId { get; set; }
     
+    public List<Guid> AuthorIds { get; set; } = new();
+    
     public string ISBN { get; set; }
     
     public string Title { get; set; }
@@ -22,6 +24,8 @@ public class CreateBookDto
     
     public Genre Genre { get; set; } 
     
+    public string CoverImage { get; set; } = string.Empty;
+    
     public decimal BasePrice { get; set; }
     
     public int PageCount { get; set; }
@@ -30,5 +34,5 @@ public class CreateBookDto
     
     public bool IsAvailable { get; set; }
     
-    public DiscountDto Discount { get; set; }
+    public BookAuthor Author { get; set; }
 }

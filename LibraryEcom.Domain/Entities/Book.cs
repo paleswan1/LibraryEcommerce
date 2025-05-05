@@ -28,8 +28,10 @@ public class Book: BaseEntity<Guid>
     
     public bool IsAvailable { get; set; }
     
-    public Discount Discount { get; set; }
     
-    // public List<BookAuthor> BookAuthors { get; set; } = new();
+    public virtual ICollection<Discount> Discount { get; set; } = [];
+    
+    public virtual ICollection<BookAuthor> BookAuthors { get; set; } = [];
 
+    
 }

@@ -3,12 +3,14 @@ using LibraryCom.Controllers.Base;
 using LibraryEcom.Application.Common.Response;
 using LibraryEcom.Application.DTOs.Book;
 using LibraryEcom.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryCom.Controllers;
 
 [Route("api/book")]
 [ApiController]
+[Authorize]
 public class BookController(IBookService bookService) : BaseController<BookController>
 {
     [HttpGet]

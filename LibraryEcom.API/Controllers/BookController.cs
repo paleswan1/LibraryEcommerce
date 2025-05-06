@@ -14,6 +14,7 @@
     public class BookController(IBookService bookService) : BaseController<BookController>
     {
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get(int pageNumber, int pageSize, string? search = null)
         {
             var books = bookService.GetAll(pageNumber, pageSize, out var rowCount, search);
@@ -26,6 +27,7 @@
             });
         }
 
+        [AllowAnonymous]
         [HttpGet("list")]
         public IActionResult GetList(string? search = null)
         {
@@ -39,6 +41,7 @@
             });
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public IActionResult GetById(Guid id)
         {
@@ -52,6 +55,7 @@
             });
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult Create([FromForm] CreateBookDto bookDto)
         {
@@ -65,6 +69,7 @@
             });
         }
 
+        [AllowAnonymous]
         [HttpPut("{id:guid}")]
         public IActionResult Update(Guid id, [FromForm] UpdateBookDto bookDto)
         {
@@ -78,6 +83,7 @@
             });
         }
 
+        [AllowAnonymous]
         [HttpDelete("{id:guid}")]
         public IActionResult Delete(Guid id)
         {

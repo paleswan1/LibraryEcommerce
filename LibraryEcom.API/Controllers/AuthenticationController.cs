@@ -55,29 +55,4 @@ public class AuthenticationController(IAuthenticationService authenticationServi
         });
     }
 
-    [HttpPost("token/expire")]
-    public IActionResult ExpireToken([FromQuery] string token)
-    {
-        authenticationService.ExpireToken(token);
-
-        return Ok(new ResponseDto<string>
-        {
-            StatusCode = (int)HttpStatusCode.OK,
-            Message = "Token successfully expired.",
-            Result = token
-        });
-    }
-
-    [HttpGet("token/is-expired")]
-    public IActionResult IsTokenExpired([FromQuery] string token)
-    {
-        var isExpired = authenticationService.IsTokenExpired(token);
-
-        return Ok(new ResponseDto<bool>
-        {
-            StatusCode = (int)HttpStatusCode.OK,
-            Message = "Token expiration status retrieved.",
-            Result = isExpired
-        });
-    }
 }

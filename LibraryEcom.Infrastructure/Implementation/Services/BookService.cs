@@ -26,6 +26,7 @@
             .ToList();
 
         var bookIds = books.Select(b => b.Id).ToList();
+        
 
         var bookAuthors = genericRepository.Get<BookAuthor>(ba => bookIds.Contains(ba.BookId))
             .Include(ba => ba.Author)
@@ -78,6 +79,7 @@
                 Description = book.Description,
                 BookFormat = book.BookFormat,
                 PublicationDate = book.PublicationDate,
+                CoverImage = book.CoverImage,
                 Genre = book.Genre,
                 BasePrice = book.BasePrice,
                 PageCount = book.PageCount,

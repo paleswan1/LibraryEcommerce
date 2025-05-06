@@ -175,6 +175,7 @@
                 Genre = book.Genre,
                 BasePrice = book.BasePrice,
                 PageCount = book.PageCount,
+                CoverImage = book.CoverImage,
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
                 Discount = activeDiscounts,
@@ -245,6 +246,7 @@
                     PublicationDate = book.PublicationDate,
                     Genre = book.Genre,
                     BasePrice = book.BasePrice,
+                    CoverImage = book.CoverImage,
                     PageCount = book.PageCount,
                     Language = book.Language,
                     IsAvailable = book.IsAvailable,
@@ -286,6 +288,7 @@
                 Genre = book.Genre,
                 BasePrice = book.BasePrice,
                 PageCount = book.PageCount,
+                CoverImage = book.CoverImage,
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
                 // Discount = book.Discount != null
@@ -375,7 +378,8 @@
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
-            }        }
+            }        
+        }
 
 
         public void Update(Guid id, UpdateBookDto dto)

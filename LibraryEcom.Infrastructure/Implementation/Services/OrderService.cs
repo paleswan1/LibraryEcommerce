@@ -16,15 +16,16 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LibraryEcom.Infrastructure.Implementation.Services;
 
-public class OrderService(IGenericRepository genericRepository,
+public class OrderService(
+    IGenericRepository genericRepository,
     ICurrentUserService currentUserService,
     IEmailService emailService,
     IWebHostEnvironment env,
-    IHubContext<NotificationsHub,INotificationsClient> hubContext) : IOrderService
+    IHubContext<NotificationsHub, INotificationsClient> hubContext) : IOrderService
 
 
 {
-    
+
     public List<OrderDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null)
     {
         var orders = genericRepository.GetPagedResult<Order>(
@@ -174,36 +175,37 @@ public class OrderService(IGenericRepository genericRepository,
 
 
         if (string.IsNullOrWhiteSpace(user.Email))
-            throw new BadRequestException("User email is missing. Cannot send order confirmation.",["Check"]);
+            throw new BadRequestException("User email is missing. Cannot send order confirmation.", ["Check"]);
 
         var emailDto = new EmailDto
         {
             FullName = user.Name,
             ToEmailAddress = user.Email,
             Subject = "📦 Your Order & Claim Code",
-            EmailProcess = EmailProcess.OrderConfirmation, 
-            PrimaryMessage = $"{claimCode}", 
-            UserName = user.UserName ?? "", 
+            EmailProcess = EmailProcess.OrderConfirmation,
+            PrimaryMessage = $"{claimCode}",
+            UserName = user.UserName ?? "",
             Remarks = $"Order #{order.Id}",
-            Body = body,               
-            IsHtml = true  
+            Body = body,
+            IsHtml = true
         };
-        
+
         await emailService.SendEmail(emailDto);
 
 
-        
+
         var orderedBookTitles = orderItems
             .Select(i => genericRepository.GetById<Book>(i.BookId)?.Title)
             .Where(t => !string.IsNullOrWhiteSpace(t))
             .ToList();
 
         await hubContext.Clients.User(userId.ToString())
-            .ReceiveNotification($"📦 Hi {user.Name}, your order has been placed successfully for: {string.Join(", ", orderedBookTitles)}");
+            .ReceiveNotification(
+                $"📦 Hi {user.Name}, your order has been placed successfully for: {string.Join(", ", orderedBookTitles)}");
         return orderId;
     }
 
-    public void FulfillOrderByClaimCode(string claimCode)
+    public async Task<Guid> FulfillOrderByClaimCode(string claimCode)
     {
         var order = genericRepository.GetFirstOrDefault<Order>(x =>
                         x.ClaimCode == claimCode && !x.IsClaimed && x.Status == "Pending")
@@ -214,10 +216,43 @@ public class OrderService(IGenericRepository genericRepository,
         order.CompletionDate = DateTime.UtcNow;
 
         genericRepository.Update(order);
+
+        var user = genericRepository.GetById<User>(order.UserId)
+                   ?? throw new NotFoundException("User not found");
+
+        var templatePath = Path.Combine(env.WebRootPath, "email-templates", "OrderFulfilledTemplate.html");
+        var template = File.ReadAllText(templatePath);
+
+        var body = template
+            .Replace("{{FullName}}", user.Name)
+            .Replace("{{OrderId}}", order.Id.ToString())
+            .Replace("{{CompletionDate}}", order.CompletionDate?.ToString("yyyy-MM-dd") ?? "");
+
+        var emailDto = new EmailDto
+        {
+            FullName = user.Name,
+            ToEmailAddress = user.Email,
+            Subject = "✅ Your Order Has Been Fulfilled",
+            EmailProcess = EmailProcess.OrderFulfillment,
+            PrimaryMessage = $"Order #{order.Id} has been successfully fulfilled.",
+            UserName = user.UserName ?? "",
+            Remarks = $"Order #{order.Id} fulfilled on {order.CompletionDate?.ToString("yyyy-MM-dd")}",
+            Body = body,
+            IsHtml = true
+        };
+
+        await emailService.SendEmail(emailDto);
+
+        await hubContext.Clients.User(user.Id.ToString())
+            .ReceiveNotification($"✅ Hi {user.Name}, your order #{order.Id} has been successfully fulfilled.");
+
+        return order.Id;
     }
 
 
-    public void CancelOrder(Guid orderId)
+
+
+public void CancelOrder(Guid orderId)
     {
         var userId = currentUserService.GetUserId;
 

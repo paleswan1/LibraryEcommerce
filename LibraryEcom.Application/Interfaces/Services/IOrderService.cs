@@ -19,7 +19,7 @@ public interface IOrderService : ITransientService
 
     Task<Guid> PlaceOrder();
 
-    public void FulfillOrderByClaimCode(string claimCode);
+    Task<Guid> FulfillOrderByClaimCode(string claimCode);
 
     void CancelOrder(Guid orderId);
 }

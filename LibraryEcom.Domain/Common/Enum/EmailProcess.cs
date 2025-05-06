@@ -4,7 +4,7 @@ public enum EmailProcess
 {
     SelfRegistration = 0,
     OrderConfirmation= 1,
-    UserRegistration = 2,
+    OrderFulfillment = 2,
     ForgetPassword = 4,
     ResetPassword = 5,
 }

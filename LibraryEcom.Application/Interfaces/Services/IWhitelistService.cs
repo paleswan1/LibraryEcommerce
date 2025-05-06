@@ -1,8 +1,9 @@
+using LibraryEcom.Application.Common.Service;
 using LibraryEcom.Application.DTOs.Whitelist;
 
 namespace LibraryEcom.Application.Interfaces.Services;
 
-public interface IWhitelistService
+public interface IWhitelistService : ITransientService
 {
     List<WhiteListDto> GetUserWishlist();
 

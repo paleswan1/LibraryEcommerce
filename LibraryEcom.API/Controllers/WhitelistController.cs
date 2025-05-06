@@ -37,7 +37,7 @@ public class WhitelistController(IWhitelistService whitelistService) : BaseContr
     }
 
     [HttpPost]
-    public IActionResult AddToWishlist([FromBody] CreateWhiteListDto dto)
+    public IActionResult AddToWishlist([FromForm] CreateWhiteListDto dto)
     {
         whitelistService.AddToWishlist(dto);
 

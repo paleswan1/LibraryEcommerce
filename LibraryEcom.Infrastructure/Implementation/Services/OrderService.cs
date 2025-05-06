@@ -10,6 +10,7 @@ using LibraryEcom.Domain.Entities.Identity;
 using MailKit;
 using System.Globalization;
 using LibraryEcom.Application.Hubs;
+using LibraryEcom.Domain.Common.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 
@@ -172,16 +173,25 @@ public class OrderService(IGenericRepository genericRepository,
             .Replace("{{ClaimExpiry}}", order.ClaimExpiry?.ToString("yyyy-MM-dd") ?? "");
 
 
-        var email = new EmailDto
-        {
-            ToEmailAddress = user.Email,
-            FullName = user.Name,
-            Subject = "📦 Your Order & Claim Code ",
-            Body = body,
-            IsHtml = true
-        };
+        if (string.IsNullOrWhiteSpace(user.Email))
+            throw new BadRequestException("User email is missing. Cannot send order confirmation.",["Check"]);
 
-        emailService.SendEmail(email);
+        var emailDto = new EmailDto
+        {
+            FullName = user.Name,
+            ToEmailAddress = user.Email,
+            Subject = "📦 Your Order & Claim Code",
+            EmailProcess = EmailProcess.OrderConfirmation, 
+            PrimaryMessage = $"{claimCode}", 
+            UserName = user.UserName ?? "", 
+            Remarks = $"Order #{order.Id}",
+            Body = body,               
+            IsHtml = true  
+        };
+        
+        await emailService.SendEmail(emailDto);
+
+
         
         var orderedBookTitles = orderItems
             .Select(i => genericRepository.GetById<Book>(i.BookId)?.Title)

@@ -54,7 +54,7 @@
             // var validDiscount = genericRepository.GetFirstOrDefault<Discount>(x => x.BookId == book.Id
             //                                                                        && x.StartDate <= DateTime.Now && x.EndDate >= DateTime.Now);
             var validDiscounts = allDiscounts
-                .Where(d =>  d.StartDate <= today && d.EndDate >= today)
+                .Where(d =>  d.StartDate >= today && d.EndDate >= today)
                 .ToList();
                 
             var activeDiscounts = validDiscounts
@@ -72,7 +72,7 @@
             bookDtos.Add(new BookDto
             {
                 Id = book.Id,
-                PublisherId = book.PublisherId,
+                PublisherName = book.PublisherName,
                 ISBN = book.ISBN,
                 Title = book.Title,
                 Description = book.Description,
@@ -164,7 +164,7 @@
             bookDtos.Add(new BookDto
             {
                 Id = book.Id,
-                PublisherId = book.PublisherId,
+                PublisherName = book.PublisherName,
                 ISBN = book.ISBN,
                 Title = book.Title,
                 Description = book.Description,
@@ -235,7 +235,7 @@
                 bookDtos.Add(new BookDto
                 {
                     Id = book.Id,
-                    PublisherId = book.PublisherId,
+                    PublisherName = book.PublisherName,
                     ISBN = book.ISBN,
                     Title = book.Title,
                     Description = book.Description,
@@ -275,7 +275,7 @@
             return new BookDto
             {
                 Id = book.Id,
-                PublisherId = book.PublisherId,
+                PublisherName = book.PublisherName,
                 ISBN = book.ISBN,
                 Title = book.Title,
                 Description = book.Description,
@@ -315,7 +315,7 @@
             var book = new Book
             {
                 Id = bookId,
-                PublisherId = dto.PublisherId,
+                PublisherName = dto.PublisherName,
                 ISBN = dto.ISBN,
                 Title = dto.Title,
                 Description = dto.Description,

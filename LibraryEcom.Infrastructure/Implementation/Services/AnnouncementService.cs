@@ -1,12 +1,15 @@
 using LibraryEcom.Application.DTOs.Announcement;
 using LibraryEcom.Application.Exceptions;
+using LibraryEcom.Application.Hubs;
 using LibraryEcom.Application.Interfaces.Repositories.Base;
 using LibraryEcom.Application.Interfaces.Services;
 using LibraryEcom.Domain.Entities;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LibraryEcom.Infrastructure.Implementation.Services;
 
-public class AnnouncementService(IGenericRepository genericRepository): IAnnouncementService
+public class AnnouncementService(IGenericRepository genericRepository,
+    IHubContext<NotificationsHub> hubContext): IAnnouncementService
 {
     public List<AnnouncementDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null)
     {
@@ -88,6 +91,9 @@ public class AnnouncementService(IGenericRepository genericRepository): IAnnounc
         };
 
         genericRepository.Insert(model);
+        
+        hubContext.Clients.All.SendAsync("ReceiveNotification", $"📢 New Announcement: {model.Message}");
+
     }
 
     public void Update(Guid id, UpdateAnnouncementDto dto)

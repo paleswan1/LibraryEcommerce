@@ -97,7 +97,7 @@ public class OrderController : BaseController<OrderController>
     }
 
     [HttpPost("fulfill-by-claim")]
-    [Authorize(Roles = "Staff")]
+    // [Authorize(Roles = "Staff")]
     public IActionResult FulfillOrder([FromBody] string claimCode)
     {
         _orderService.FulfillOrderByClaimCode(claimCode);

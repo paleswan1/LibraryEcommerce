@@ -18,11 +18,20 @@ public class EmailService(
     private readonly MailSettings _mailSettings = smtpSettings.Value;
 
     private const string EmailPath = Constants.FilePath.EmailTemplateFilePath;
-    
+
     public async Task SendEmail(EmailDto emailDto)
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(emailDto.ToEmailAddress))
+                throw new BadRequestException("Recipient email address is required.", ["ToEmailAddress is null or empty."]);
+
+            if (string.IsNullOrWhiteSpace(emailDto.FullName))
+                throw new BadRequestException("Recipient full name is required.", ["FullName is null or empty."]);
+
+            if (string.IsNullOrWhiteSpace(emailDto.Subject))
+                throw new BadRequestException("Email subject is required.", ["Subject is null or empty."]);
+
             var fromAddress = new MailAddress(_mailSettings.Username, "LibraryEcom");
             var toAddress = new MailAddress(emailDto.ToEmailAddress, emailDto.FullName);
 
@@ -30,11 +39,13 @@ public class EmailService(
             {
                 From = fromAddress,
                 Subject = emailDto.Subject,
-                IsBodyHtml = true
+                IsBodyHtml = true,
+                Body = string.IsNullOrWhiteSpace(emailDto.Body)
+                    ? PrepareEmailBody(emailDto)
+                    : emailDto.Body
             };
 
             message.To.Add(toAddress);
-            message.Body = PrepareEmailBody(emailDto);
 
             if (!string.IsNullOrEmpty(emailDto.Cc))
             {
@@ -55,12 +66,12 @@ public class EmailService(
         }
     }
 
-    
+
     private string PrepareEmailBody(EmailDto dto)
     {
         dto.PlaceHolders = GetPlaceholders(dto);
 
-        var templateName = dto.Subject.Replace(" ", "");
+        var templateName = dto.EmailProcess.ToString();
         var htmlTemplate = GetTemplate(templateName);
 
         foreach (var placeholder in dto.PlaceHolders)
@@ -93,6 +104,4 @@ public class EmailService(
             new("{$role}", dto.Role ?? "")
         };
     }
-
-    
 }

@@ -178,8 +178,9 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("PublisherId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("PublisherName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()

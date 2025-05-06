@@ -228,22 +228,27 @@ public class AuthenticationService(
 
         var userModel = new User()
         {
-            Email = user.Email,
             Name = user.Name,
+            UserName = user.Email,
+            NormalizedUserName = user.Email.ToUpper(),
+            Email = user.Email,
+            NormalizedEmail = user.Email.ToUpper(),
             Address = user.Address,
-
-
+            IsActive = true,
+            EmailConfirmed = true,
+            RegisteredDate = DateTime.UtcNow
         };
+
         var result = await userManager.CreateAsync(userModel, user.Password);
 
         if (!result.Succeeded)
         {
-            var roles = await userManager.FindByIdAsync(userModel.Id.ToString());
-
-            if (roles != null)
+            var role = await roleManager.FindByIdAsync(user.RoleId.ToString());
+            if (role != null)
             {
-                await userManager.AddToRoleAsync(userModel, roles.Name);
+                await userManager.AddToRoleAsync(userModel, role.Name);
             }
+
         }
         else
         {

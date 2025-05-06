@@ -17,6 +17,8 @@ public static class InfrastructureServices
 
         configuration.GetSection(nameof(DatabaseSettings)).Bind(databaseSettings);
 
+        services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+        
         var connectionString = databaseSettings.DbProvider == Constants.DbProviderKeys.Npgsql
             ? databaseSettings.NpgSqlConnectionString
             : databaseSettings.SqlServerConnectionString;

@@ -10,7 +10,7 @@ public class BookDto
 {
     public Guid Id { get; set; }
 
-    public Guid PublisherId { get; set; }
+    public string PublisherName { get; set; } = string.Empty;
     
     public string ISBN { get; set; }
     

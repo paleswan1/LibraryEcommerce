@@ -34,7 +34,7 @@ public class CartService(
                 Book = new BookDto
                 {
                     Id = book.Id,
-                    PublisherId = book.PublisherId,
+                    PublisherName = book.PublisherName,
                     ISBN = book.ISBN,
                     Title = book.Title,
                     Description = book.Description,
@@ -67,7 +67,7 @@ public class CartService(
                 Book = new BookDto
                 {
                     Id = book.Id,
-                    PublisherId = book.PublisherId,
+                    PublisherName = book.PublisherName,
                     ISBN = book.ISBN,
                     Title = book.Title,
                     Description = book.Description,
@@ -97,7 +97,7 @@ public class CartService(
             Book = new BookDto
             {
                 Id = book.Id,
-                PublisherId = book.PublisherId,
+                PublisherName = book.PublisherName,
                 ISBN = book.ISBN,
                 Title = book.Title,
                 Description = book.Description,

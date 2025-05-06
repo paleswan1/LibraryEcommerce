@@ -26,6 +26,18 @@ public abstract class Constants
         }
     }
     
+    public abstract class Staff
+    {
+        public const string Identifier = "88b6d6e1-3e19-4ae6-a7a1-5cb1584b0123"; 
+
+        public abstract class Development
+        {
+            public const string Name = "Library Staff";
+            public const string EmailAddress = "mochimmy6@gmail.com";
+            public const string DecryptedPassword = "St@ff123"; // Use a strong password
+        }
+    }
+
     public abstract class Cors
     {
         public const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

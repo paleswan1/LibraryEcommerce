@@ -44,7 +44,7 @@ public class WhitelistService(
                     PublicationDate = book.PublicationDate,
                     IsAvailable = book.IsAvailable,
                     PageCount = book.PageCount,
-                    PublisherId = book.PublisherId
+                    PublisherName = book.PublisherName,
                 } : null
             });
         }
@@ -90,7 +90,7 @@ public class WhitelistService(
                         PublicationDate = book.PublicationDate,
                         IsAvailable = book.IsAvailable,
                         PageCount = book.PageCount,
-                        PublisherId = book.PublisherId
+                        PublisherName = book.PublisherName,
                     }
                 });
             }

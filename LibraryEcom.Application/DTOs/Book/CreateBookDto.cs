@@ -9,7 +9,7 @@ public class CreateBookDto
 {
     public Guid Id { get; set; }
 
-    public Guid PublisherId { get; set; }
+    public string PublisherName { get; set; } = string.Empty;
     
     public List<Guid> AuthorIds { get; set; } = new();
     

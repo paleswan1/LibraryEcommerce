@@ -90,31 +90,5 @@
                 Result = true
             });
         }
-        
-        [HttpPost("upload-image")]
-        public IActionResult UploadImage([FromForm] IFormFile file)
-        {
-            var fileName = bookService.UploadImage(file);
-
-            return Ok(new ResponseDto<string>
-            {
-                StatusCode = (int)HttpStatusCode.OK,
-                Message = "Image uploaded successfully.",
-                Result = fileName
-            });
-        }
-
-        [HttpDelete("delete-image")]
-        public IActionResult DeleteImage([FromQuery] string fileName)
-        {
-            bookService.DeleteImage(fileName);
-
-            return Ok(new ResponseDto<bool>
-            {
-                StatusCode = (int)HttpStatusCode.OK,
-                Message = "Image deleted successfully.",
-                Result = true
-            });
-        }
 
     }

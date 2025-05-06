@@ -17,7 +17,7 @@ public class Book: BaseEntity<Guid>
     
     public BookFormat BookFormat { get; set; } 
     
-    public DateTime PublicationDate { get; set; }
+    public DateOnly PublicationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     
     public Genre Genre { get; set; } 
     

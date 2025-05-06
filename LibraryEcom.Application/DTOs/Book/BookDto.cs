@@ -20,7 +20,7 @@ public class BookDto
     
     public  BookFormat BookFormat { get; set; } 
     
-    public DateTime PublicationDate { get; set; }
+    public DateOnly PublicationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     
     public Genre Genre { get; set; } 
     
@@ -36,6 +36,8 @@ public class BookDto
 
     
     public List<DiscountDto> Discount { get; set; } = new List<DiscountDto>();
+    
+    public DiscountDto ValidatedDiscount { get; set; }
     
     public List<AuthorDto> Authors { get; set; } = new List<AuthorDto>();
     

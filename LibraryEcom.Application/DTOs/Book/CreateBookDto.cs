@@ -21,7 +21,7 @@ public class CreateBookDto
     
     public  BookFormat BookFormat { get; set; } 
     
-    public DateOnly PublicationDate { get; set; }
+    public DateOnly PublicationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     
     public Genre Genre { get; set; } 
     

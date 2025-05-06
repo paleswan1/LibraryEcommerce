@@ -22,7 +22,7 @@ public abstract class Constants
         {
             public const string Name = "Affinity";
             public const string EmailAddress = "affinity@affinity.io";
-            public const string DecryptedPassword = "radi0V!oleta";
+            public const string DecryptedPassword = "admin@123";
         }
     }
     

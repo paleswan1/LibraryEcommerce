@@ -66,7 +66,7 @@
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult Update(Guid id, [FromBody] UpdateBookDto bookDto)
+        public IActionResult Update(Guid id, [FromForm] UpdateBookDto bookDto)
         {
             bookService.Update(id, bookDto);
 

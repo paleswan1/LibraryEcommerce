@@ -48,27 +48,36 @@
                     Biography = ba.Author.Biography,
                     BirthDate = ba.Author.BirthDate
                 }).ToList();
-
-            var allDiscounts = genericRepository.Get<Discount>(d => bookIds.Contains(d.BookId)).ToList();
-
             
-            // var validDiscount = genericRepository.GetFirstOrDefault<Discount>(x => x.BookId == book.Id
-            //                                                                        && x.StartDate <= DateTime.Now && x.EndDate >= DateTime.Now);
-            var validDiscounts = allDiscounts
-                .Where(d =>  d.StartDate >= today && d.EndDate >= today)
-                .ToList();
+                var validDiscount = genericRepository.GetFirstOrDefault<Discount>(
+                    x => x.BookId == book.Id && x.StartDate <= today && x.EndDate >= today
+                );
                 
-            var activeDiscounts = validDiscounts
-                .Where(d => d.BookId == book.Id)
-                .Select(d => new DiscountDto
+                var allDiscounts = genericRepository.Get<Discount>(d => d.BookId == book.Id).ToList()
+                    .Select(d=> new DiscountDto
+                    {
+                        Id = d.Id,
+                        DiscountPercentage = d.DiscountPercentage,
+                        StartDate = d.StartDate,
+                        EndDate = d.EndDate,
+                        BookId = d.BookId,
+                        IsSaleFlag = d.IsSaleFlag
+                    }).ToList();
+
+                DiscountDto discountDto = null;
+
+                if (validDiscount != null)
                 {
-                    Id = d.Id,
-                    BookId = d.BookId,
-                    DiscountPercentage = d.DiscountPercentage,
-                    StartDate = d.StartDate,
-                    EndDate = d.EndDate,
-                    IsSaleFlag = d.IsSaleFlag,
-                }).ToList();
+                    discountDto = new DiscountDto
+                    {
+                        Id = validDiscount.Id,
+                        BookId = validDiscount.BookId,
+                        DiscountPercentage = validDiscount.DiscountPercentage,
+                        StartDate = validDiscount.StartDate,
+                        EndDate = validDiscount.EndDate,
+                        IsSaleFlag = validDiscount.IsSaleFlag,
+                    };
+                }
 
             bookDtos.Add(new BookDto
             {
@@ -85,8 +94,9 @@
                 PageCount = book.PageCount,
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
-                Discount = activeDiscounts,
+                Discount = allDiscounts,
                 Authors = authors,
+                ValidatedDiscount = discountDto
                 
             });
         }
@@ -325,10 +335,7 @@
                 Title = dto.Title,
                 Description = dto.Description,
                 BookFormat = dto.BookFormat,
-                PublicationDate = DateTime.SpecifyKind(
-                    dto.PublicationDate.ToDateTime(TimeOnly.MinValue),
-                    DateTimeKind.Utc
-                ),
+                PublicationDate = dto.PublicationDate,
                 Genre = dto.Genre,
                 CoverImage = coverImage,
                 BasePrice = dto.BasePrice,
@@ -387,6 +394,19 @@
             var book = genericRepository.GetById<Book>(id)
                        ?? throw new NotFoundException("Book not found");
 
+            // Handle cover image update
+            if (dto.CoverImage != null)
+            {
+                // Delete old image if exists
+                if (!string.IsNullOrWhiteSpace(book.CoverImage))
+                {
+                    DeleteImage(book.CoverImage);
+                }
+
+                book.CoverImage = UploadImage(dto.CoverImage);
+            }
+
+            book.PublisherName = dto.PublisherName;
             book.ISBN = dto.ISBN;
             book.Title = dto.Title;
             book.Description = dto.Description;
@@ -398,8 +418,34 @@
             book.Language = dto.Language;
             book.IsAvailable = dto.IsAvailable;
 
-            genericRepository.Update(book);
+            if (dto.AuthorIds != null && dto.AuthorIds.Any())
+            {
+                var authors = genericRepository.Get<Author>(x => dto.AuthorIds.Contains(x.Id)).ToList();
+
+                var existingAuthors = genericRepository.Get<BookAuthor>(x => x.BookId == book.Id).ToList();
+                foreach (var ba in existingAuthors)
+                {
+                    genericRepository.Delete(ba);
+                }
+
+                // Add new author links
+                book.BookAuthors = authors.Select(a => new BookAuthor
+                {
+                    BookId = book.Id,
+                    AuthorId = a.Id
+                }).ToList();
+            }
+
+            try
+            {
+                genericRepository.Update(book);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating book: " + ex.InnerException?.Message ?? ex.Message);
+            }
         }
+
 
         public void Delete(Guid id)
         {

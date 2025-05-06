@@ -31,6 +31,9 @@ public class Book: BaseEntity<Guid>
     
     public string? CoverImage { get; set; }
     
+    public virtual ICollection<Review> Reviews { get; set; } = [];
+
+    
     public virtual ICollection<Discount> Discount { get; set; } = [];
     
     public virtual ICollection<BookAuthor> BookAuthors { get; set; } = [];

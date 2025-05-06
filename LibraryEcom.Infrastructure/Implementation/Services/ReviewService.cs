@@ -107,9 +107,13 @@ public class ReviewService(IGenericRepository genericRepository): IReviewService
         var book = genericRepository.GetById<Book>(dto.BookId)
             ?? throw new NotFoundException("Book not found.");
         
+        var user = genericRepository.GetById<User>(dto.UserId)
+                   ?? throw new NotFoundException("User not found");
+        
         var review = new Review
         {
             BookId = book.Id,
+            UserId = user.Id,
             Rating = dto.Rating,
             Comment = dto.Comment,
             ReviewDate = DateTime.UtcNow

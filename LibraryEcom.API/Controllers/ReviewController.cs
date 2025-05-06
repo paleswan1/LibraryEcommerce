@@ -50,7 +50,7 @@ public class ReviewController(IReviewService reviewService) : BaseController<Rev
     }
 
     [HttpPost]
-    public IActionResult CreateReview(CreateReviewDto review)
+    public IActionResult CreateReview([FromForm] CreateReviewDto review)
     {
         reviewService.Create(review);
 

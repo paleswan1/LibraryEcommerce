@@ -1,6 +1,7 @@
     using LibraryEcom.Application.DTOs.Author;
     using LibraryEcom.Application.DTOs.Book;
     using LibraryEcom.Application.DTOs.Discounts;
+    using LibraryEcom.Application.DTOs.Review;
     using LibraryEcom.Application.Exceptions;
     using LibraryEcom.Application.Interfaces.Services;
     using LibraryEcom.Application.Interfaces.Repositories.Base;
@@ -27,7 +28,6 @@
 
         var bookIds = books.Select(b => b.Id).ToList();
         
-
         var bookAuthors = genericRepository.Get<BookAuthor>(ba => bookIds.Contains(ba.BookId))
             .Include(ba => ba.Author)
             .ToList();
@@ -38,7 +38,9 @@
         foreach (var book in books)
         {
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
-
+            
+            var reviews = genericRepository.Get<Review>(r => bookIds.Contains(r.BookId)).ToList();
+            
             var authors = bookAuthors
                 .Where(ba => ba.BookId == book.Id)
                 .Select(ba => new AuthorDto
@@ -49,11 +51,21 @@
                     BirthDate = ba.Author.BirthDate
                 }).ToList();
             
-                var validDiscount = genericRepository.GetFirstOrDefault<Discount>(
+            var validDiscount = genericRepository.GetFirstOrDefault<Discount>(
                     x => x.BookId == book.Id && x.StartDate <= today && x.EndDate >= today
                 );
-                
-                var allDiscounts = genericRepository.Get<Discount>(d => d.BookId == book.Id).ToList()
+            
+            var bookReviews = reviews
+                .Where(r => r.BookId == book.Id)
+                .Select(r => new ReviewDto
+                {
+                    Id = r.Id,
+                    Comment = r.Comment,
+                    Rating = r.Rating,
+                    ReviewDate = r.ReviewDate
+                }).ToList();
+            
+            var allDiscounts = genericRepository.Get<Discount>(d => d.BookId == book.Id).ToList()
                     .Select(d=> new DiscountDto
                     {
                         Id = d.Id,
@@ -96,8 +108,8 @@
                 IsAvailable = book.IsAvailable,
                 Discount = allDiscounts,
                 Authors = authors,
+                Reviews = bookReviews,
                 ValidatedDiscount = discountDto
-                
             });
         }
         

@@ -1194,7 +1194,7 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
             modelBuilder.Entity("LibraryEcom.Domain.Entities.Review", b =>
                 {
                     b.HasOne("LibraryEcom.Domain.Entities.Book", "Book")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1274,6 +1274,8 @@ namespace LibraryEcom.Migrators.PostgreSQL.Migrations.Application
                     b.Navigation("BookAuthors");
 
                     b.Navigation("Discount");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("LibraryEcom.Domain.Entities.Order", b =>

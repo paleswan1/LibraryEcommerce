@@ -1,5 +1,6 @@
 using LibraryEcom.Application.DTOs.Author;
 using LibraryEcom.Application.DTOs.Discounts;
+using LibraryEcom.Application.DTOs.Review;
 using LibraryEcom.Domain.Common.Enum;
 using LibraryEcom.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -33,11 +34,12 @@ public class BookDto
     public bool IsAvailable { get; set; }
     
     public string? CoverImage { get; set; }
-
     
     public List<DiscountDto> Discount { get; set; } = new List<DiscountDto>();
     
     public DiscountDto ValidatedDiscount { get; set; }
+    
+    public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
     
     public List<AuthorDto> Authors { get; set; } = new List<AuthorDto>();
     

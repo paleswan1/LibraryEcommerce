@@ -45,6 +45,7 @@ public class WhitelistService(
                     IsAvailable = book.IsAvailable,
                     PageCount = book.PageCount,
                     PublisherName = book.PublisherName,
+                    CoverImage = book.CoverImage
                 } : null
             });
         }
@@ -91,6 +92,7 @@ public class WhitelistService(
                         IsAvailable = book.IsAvailable,
                         PageCount = book.PageCount,
                         PublisherName = book.PublisherName,
+                        CoverImage = book.CoverImage
                     }
                 });
             }
@@ -102,6 +104,10 @@ public class WhitelistService(
     public void AddToWishlist(CreateWhiteListDto dto)
     {
         var userId = currentUserService.GetUserId;
+        
+        if (userId == Guid.Empty)
+            throw new UnauthorizedAccessException("Current user ID could not be determined.");
+
 
         var exists = genericRepository.Exists<WhiteList>(x => x.UserId == userId && x.BookId == dto.BookId);
 

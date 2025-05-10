@@ -22,4 +22,6 @@ public interface IOrderService : ITransientService
     Task<Guid> FulfillOrderByClaimCode(string claimCode);
 
     void CancelOrder(Guid orderId);
+    
+    List<OrderDto> GetMyOrders();
 }

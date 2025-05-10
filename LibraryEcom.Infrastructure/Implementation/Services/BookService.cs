@@ -131,13 +131,12 @@
                 (isActive == null || x.IsAvailable == isActive)
             );
 
-        // Apply Sorting
         query = sortBy?.ToLower() switch
         {
             "title" => isDescending ? query.OrderByDescending(b => b.Title) : query.OrderBy(b => b.Title),
             "price" => isDescending ? query.OrderByDescending(b => b.BasePrice) : query.OrderBy(b => b.BasePrice),
             "date" => isDescending ? query.OrderByDescending(b => b.PublicationDate) : query.OrderBy(b => b.PublicationDate),
-            _ => query.OrderBy(b => b.Title) // Default sorting
+            _ => query.OrderBy(b => b.Title) 
         };
 
         rowCount = query.Count();
@@ -386,7 +385,8 @@
             
             file.CopyTo(stream);
             
-            return fileName;        }
+            return fileName;        
+        }
 
         public void DeleteImage(string fileName)
         {
@@ -465,5 +465,10 @@
                        ?? throw new NotFoundException("Book not found");
 
             genericRepository.Delete(book);
+        }
+
+        public PagedBookResponseDto GetBooksByGenre(string? genre, int pageNumber, int pageSize, string? search)
+        {
+            throw new NotImplementedException();
         }
     }

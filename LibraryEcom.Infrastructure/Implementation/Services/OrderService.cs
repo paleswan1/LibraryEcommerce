@@ -9,6 +9,8 @@ using LibraryEcom.Domain.Entities;
 using LibraryEcom.Domain.Entities.Identity;
 using MailKit;
 using System.Globalization;
+using LibraryEcom.Application.DTOs.Book;
+using LibraryEcom.Application.DTOs.OrderItem;
 using LibraryEcom.Application.Hubs;
 using LibraryEcom.Domain.Common.Enum;
 using Microsoft.AspNetCore.Hosting;
@@ -171,7 +173,9 @@ public class OrderService(
             .Replace("{{FullName}}", user.Name)
             .Replace("{{OrderId}}", order.Id.ToString())
             .Replace("{{ClaimCode}}", claimCode)
-            .Replace("{{ClaimExpiry}}", order.ClaimExpiry?.ToString("yyyy-MM-dd") ?? "");
+            .Replace("{{ClaimExpiry}}", order.ClaimExpiry?.ToString("yyyy-MM-dd") ?? "")
+            .Replace("{{UserId}}", user.Id.ToString());
+
 
 
         if (string.IsNullOrWhiteSpace(user.Email))
@@ -191,9 +195,7 @@ public class OrderService(
         };
 
         await emailService.SendEmail(emailDto);
-
-
-
+        
         var orderedBookTitles = orderItems
             .Select(i => genericRepository.GetById<Book>(i.BookId)?.Title)
             .Where(t => !string.IsNullOrWhiteSpace(t))
@@ -248,10 +250,7 @@ public class OrderService(
 
         return order.Id;
     }
-
-
-
-
+    
 public void CancelOrder(Guid orderId)
     {
         var userId = currentUserService.GetUserId;
@@ -271,8 +270,52 @@ public void CancelOrder(Guid orderId)
         genericRepository.Delete(order);
     }
 
-    private static OrderDto MapOrderToDto(Order o)
+    public List<OrderDto> GetMyOrders()
     {
+        var userId = currentUserService.GetUserId;
+
+        var orders = genericRepository.Get<Order>(x => x.UserId == userId)
+            .OrderByDescending(x => x.OrderDate)
+            .ToList();
+
+        return orders.Select(o => MapOrderToDto(o)).ToList();
+    }
+
+    private OrderDto MapOrderToDto(Order o)
+    {
+        var orderItems = genericRepository.Get<OrderItem>(x => x.OrderId == o.Id).ToList();
+
+        var bookIds = orderItems.Select(i => i.BookId).Distinct().ToList();
+        var books = genericRepository.Get<Book>(x => bookIds.Contains(x.Id)).ToList();
+
+        var items = orderItems.Select(i =>
+        {
+            var book = books.FirstOrDefault(b => b.Id == i.BookId);
+            return new OrderItemDto
+            {
+                Id = i.Id,
+                BookId = i.BookId,
+                Quantity = i.Quantity,
+                UnitPrice = i.UnitPrice,
+                Book = book == null ? null : new BookDto
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Genre = book.Genre,
+                    CoverImage = book.CoverImage,
+                    BasePrice = book.BasePrice,
+                    PublisherName = book.PublisherName,
+                    ISBN = book.ISBN,
+                    Language = book.Language,
+                    Description = book.Description,
+                    BookFormat = book.BookFormat,
+                    PageCount = book.PageCount,
+                    PublicationDate = book.PublicationDate,
+                    IsAvailable = book.IsAvailable
+                }
+            };
+        }).ToList();
+
         return new OrderDto
         {
             Id = o.Id,
@@ -286,7 +329,10 @@ public void CancelOrder(Guid orderId)
             TotalAmount = o.TotalAmount,
             ClaimCode = o.ClaimCode,
             ClaimExpiry = o.ClaimExpiry,
-            IsClaimed = o.IsClaimed
+            IsClaimed = o.IsClaimed,
+            Items = items
+            
         };
     }
+
 }

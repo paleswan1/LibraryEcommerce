@@ -9,7 +9,7 @@ namespace LibraryCom.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class DashboardController(IDashboardService dashboardService):BaseController<DashboardController>
+public class DashboardController(IDashboardService dashboardService) : BaseController<DashboardController>
 {
     [HttpGet("monthly-orders")]
     public async Task<IActionResult> GetMonthlyOrders([FromQuery] int months = 6)
@@ -20,6 +20,19 @@ public class DashboardController(IDashboardService dashboardService):BaseControl
         {
             StatusCode = (int)HttpStatusCode.OK,
             Message = "Monthly orders retrieved successfully.",
+            Result = result
+        });
+    }
+
+    [HttpGet("overview")]
+    public async Task<IActionResult> GetOverview([FromQuery] int period)
+    {
+        var result = await dashboardService.GetLibraryDashboardOverviewAsync(period);
+
+        return Ok(new ResponseDto<GetLibraryDashboardOverviewDto>
+        {
+            StatusCode = (int)HttpStatusCode.OK,
+            Message = "Library dashboard overview retrieved successfully.",
             Result = result
         });
     }

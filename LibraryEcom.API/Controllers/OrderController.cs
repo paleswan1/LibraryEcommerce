@@ -136,4 +136,19 @@ public class OrderController : BaseController<OrderController>
             Result = true
         });
     }
+    
+    [HttpGet("my-orders")]
+    [Authorize] // Ensures only logged-in users can call this
+    public IActionResult GetMyOrders()
+    {
+        var orders = _orderService.GetMyOrders();
+
+        return Ok(new ResponseDto<List<OrderDto>>
+        {
+            StatusCode = (int)HttpStatusCode.OK,
+            Message = "User orders retrieved successfully.",
+            Result = orders
+        });
+    }
+
 }

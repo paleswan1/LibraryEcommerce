@@ -44,7 +44,9 @@ public class CartService(
                     BasePrice = book.BasePrice,
                     PageCount = book.PageCount,
                     Language = book.Language,
-                    IsAvailable = book.IsAvailable
+                    IsAvailable = book.IsAvailable,
+                    CoverImage = book.CoverImage
+
                 },
                 Quantity = cart.Quantity
             };
@@ -64,6 +66,7 @@ public class CartService(
 
             return new CartDto
             {
+                Id = cart.Id,
                 Book = new BookDto
                 {
                     Id = book.Id,
@@ -77,7 +80,9 @@ public class CartService(
                     BasePrice = book.BasePrice,
                     PageCount = book.PageCount,
                     Language = book.Language,
-                    IsAvailable = book.IsAvailable
+                    IsAvailable = book.IsAvailable,
+                    CoverImage = book.CoverImage
+
                 },
                 Quantity = cart.Quantity
             };
@@ -107,7 +112,8 @@ public class CartService(
                 BasePrice = book.BasePrice,
                 PageCount = book.PageCount,
                 Language = book.Language,
-                IsAvailable = book.IsAvailable
+                IsAvailable = book.IsAvailable,
+                CoverImage = book.CoverImage
             },
             Quantity = cart.Quantity
         };
@@ -184,73 +190,93 @@ public class CartService(
     }
 
     public Guid PlaceOrderFromCart()
+{
+    var userId = currentUserService.GetUserId;
+
+    var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
+
+    if (!cartItems.Any())
+        throw new BadRequestException("Cart is empty.", new[] { "No items found in the cart." });
+
+    List<OrderItem> orderItems = new();
+    decimal subtotal = 0;
+
+    try
     {
-        var userId = currentUserService.GetUserId;
-        var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
-
-        if (!cartItems.Any())
-            throw new BadRequestException("Cart is empty.", new[] { "No items found in the cart." });
-
-        var subtotal = cartItems.Sum(item =>
+        foreach (var cart in cartItems)
         {
-            var book = genericRepository.GetById<Book>(item.BookId)
-                       ?? throw new NotFoundException("Book not found while placing order");
-            return book.BasePrice * item.Quantity;
-        });
+            var book = genericRepository.GetById<Book>(cart.BookId)
+                       ?? throw new NotFoundException($"Book not found for BookId: {cart.BookId}");
 
-        decimal discount = 0;
-        if (cartItems.Sum(x => x.Quantity) >= 5)
-        {
-            discount += subtotal * 0.05m;
-        }
+            subtotal += book.BasePrice * cart.Quantity;
 
-        var pastOrdersCount = genericRepository.Get<Order>(x => x.UserId == userId).Count();
-        if (pastOrdersCount >= 10)
-        {
-            discount += subtotal * 0.10m;
-        }
-
-        var total = subtotal - discount;
-
-        var order = new Order
-        {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            OrderDate = DateTime.UtcNow,
-            Status = "Pending",
-            Subtotal = subtotal,
-            DiscountAmount = discount,
-            LoyaltyDiscountAmount = 0,
-            TotalAmount = total,
-            IsClaimed = false
-        };
-
-        genericRepository.Insert(order);
-
-        foreach (var item in cartItems)
-        {
-            var book = genericRepository.GetById<Book>(item.BookId)
-                       ?? throw new NotFoundException("Book not found for order item");
-
-            var orderItem = new OrderItem
+            orderItems.Add(new OrderItem
             {
                 Id = Guid.NewGuid(),
-                OrderId = order.Id,
-                BookId = item.BookId,
-                Quantity = item.Quantity,
+                BookId = book.Id,
+                Quantity = cart.Quantity,
                 UnitPrice = book.BasePrice
-            };
-
-            genericRepository.Insert(orderItem);
+                // OrderId will be set after order is created
+            });
         }
-
-        foreach (var item in cartItems)
-        {
-            genericRepository.Delete(item);
-        }
-
-        return order.Id;
     }
+    catch (Exception ex)
+    {
+        throw new Exception("Error preparing order items: " + (ex.InnerException?.Message ?? ex.Message));
+    }
+
+    // Apply discount rules
+    decimal discount = 0;
+    int totalBooksOrdered = cartItems.Sum(x => x.Quantity);
+    if (totalBooksOrdered >= 5)
+    {
+        discount += subtotal * 0.05m;
+    }
+
+    int pastOrdersCount = genericRepository.Get<Order>(x => x.UserId == userId).Count();
+    if (pastOrdersCount >= 10)
+    {
+        discount += subtotal * 0.10m;
+    }
+
+    decimal total = subtotal - discount;
+
+    var order = new Order
+    {
+        Id = Guid.NewGuid(),
+        UserId = userId,
+        OrderDate = DateTime.UtcNow,
+        Status = "Pending",
+        Subtotal = subtotal,
+        DiscountAmount = discount,
+        LoyaltyDiscountAmount = 0,
+        TotalAmount = total,
+        IsClaimed = false
+    };
+
+    try
+    {
+        // Save order
+        genericRepository.Insert(order);
+
+        // Link and save each order item
+        foreach (var item in orderItems)
+        {
+            item.OrderId = order.Id;
+            genericRepository.Insert(item);
+        }
+
+        // Clear the cart
+        genericRepository.RemoveMultipleEntity(cartItems);
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("Failed to place order: " + (ex.InnerException?.Message ?? ex.Message));
+    }
+
+    return order.Id;
+}
+
 
     public void CancelOrder(Guid orderId)
     {
@@ -262,4 +288,17 @@ public class CartService(
 
         genericRepository.Delete(order);
     }
+    
+    public void ClearCart()
+    {
+        var userId = currentUserService.GetUserId;
+
+        var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
+
+        foreach (var item in cartItems)
+        {
+            genericRepository.Delete(item);
+        }
+    }
+
 }

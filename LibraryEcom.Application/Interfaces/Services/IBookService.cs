@@ -16,9 +16,13 @@ public interface IBookService: ITransientService
     void Create(CreateBookDto dto);
     
     string UploadImage(IFormFile file);
+    
     void DeleteImage(string fileName);
 
     void Update(Guid id, UpdateBookDto dto);
 
     void Delete(Guid id);
+    
+    PagedBookResponseDto GetBooksByGenre(string? genre, int pageNumber, int pageSize, string? search);
+
 }

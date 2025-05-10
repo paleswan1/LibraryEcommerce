@@ -131,4 +131,17 @@ public class CartController(ICartService cartService) : BaseController<CartContr
             Result = true
         });
     }
+
+    [HttpDelete("clear-all")]
+    public IActionResult ClearCart()
+    {
+        cartService.ClearCart();
+        return Ok(new ResponseDto<bool>
+        {
+            StatusCode = (int)HttpStatusCode.OK,
+            Message = "Cart cleared successfully.",
+            Result = true
+        });
+    }
+
 }

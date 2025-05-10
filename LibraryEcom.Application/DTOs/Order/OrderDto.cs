@@ -1,3 +1,4 @@
+using LibraryEcom.Application.DTOs.OrderItem;
 using LibraryEcom.Application.DTOs.User;
 
 namespace LibraryEcom.Application.DTOs.Order;
@@ -29,4 +30,6 @@ public class OrderDto
     public DateTime? ClaimExpiry { get; set; }
 
     public bool IsClaimed { get; set; }
+    
+    public List<OrderItemDto> Items { get; set; }
 }

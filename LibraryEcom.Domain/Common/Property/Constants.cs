@@ -74,4 +74,13 @@ public abstract class Constants
         
     }
     
+    public abstract class TimePeriod
+    {
+        public const int All = 0;
+        public const int Weekly = 1;
+        public const int Monthly = 2;
+        public const int Yearly = 3;
+    }
+
+    
 }

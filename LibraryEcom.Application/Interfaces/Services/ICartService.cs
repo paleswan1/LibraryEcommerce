@@ -22,4 +22,6 @@ public interface ICartService: ITransientService
     Guid PlaceOrderFromCart();
     
     void CancelOrder(Guid orderId);
+    
+    void ClearCart();
 }

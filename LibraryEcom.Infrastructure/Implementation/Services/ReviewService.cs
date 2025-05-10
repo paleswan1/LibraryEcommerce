@@ -133,7 +133,11 @@ public class ReviewService(IGenericRepository genericRepository,
                 Id = user.Id,
                 Name = user.Name,
                 EmailAddress = user.Email,
-                // etc.
+                IsActive = true,
+                RegisteredDate = user.RegisteredDate,
+                ImageURL = user.ImageURL,
+                Address = user.Address,
+                Gender = user.Gender,
             }
         };
     }

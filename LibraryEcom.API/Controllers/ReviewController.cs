@@ -48,6 +48,30 @@ public class ReviewController(IReviewService reviewService) : BaseController<Rev
             Result = review
         });
     }
+    
+    [HttpGet("my-review")]
+    public IActionResult GetMyReview([FromQuery] Guid bookId)
+    {
+        var review = reviewService.GetUserReviewByBook(bookId);
+
+        if (review == null)
+        {
+            return Ok(new ResponseDto<ReviewDto?>
+            {
+                StatusCode = (int)HttpStatusCode.NoContent,
+                Message = "No review found for this user.",
+                Result = null
+            });
+        }
+
+        return Ok(new ResponseDto<ReviewDto>
+        {
+            StatusCode = (int)HttpStatusCode.OK,
+            Message = "User review retrieved successfully.",
+            Result = review
+        });
+    }
+
 
     [HttpPost]
     public IActionResult CreateReview([FromForm] CreateReviewDto review)

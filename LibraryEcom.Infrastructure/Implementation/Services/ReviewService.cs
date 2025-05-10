@@ -32,7 +32,7 @@ public class ReviewService(IGenericRepository genericRepository,
                 Rating = review.Rating,
                 Comment = review.Comment,
                 ReviewDate = review.ReviewDate,
-                IsOwnReview = currentUserId == review.UserId, // ✅ Ownership check
+                IsOwnReview = currentUserId == review.UserId, 
                 User = new UserDto
                 {
                     Id = user.Id,
@@ -108,7 +108,37 @@ public class ReviewService(IGenericRepository genericRepository,
         };    
     }
 
-   
+    public ReviewDto? GetUserReviewByBook(Guid bookId)
+    {
+        var currentUserId = currentUserService.GetUserId;
+
+        var review = genericRepository
+            .Get<Review>(x => x.BookId == bookId && x.UserId == currentUserId)
+            .FirstOrDefault();
+
+        if (review == null) return null;
+
+        var user = genericRepository.GetById<User>(currentUserId)
+                   ?? throw new NotFoundException("User not found.");
+
+        return new ReviewDto
+        {
+            Id = review.Id,
+            Rating = review.Rating,
+            Comment = review.Comment,
+            ReviewDate = review.ReviewDate,
+            IsOwnReview = true,
+            User = new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                EmailAddress = user.Email,
+                // etc.
+            }
+        };
+    }
+
+
     public void Create(CreateReviewDto dto)
     {
         var book = genericRepository.GetById<Book>(dto.BookId)

@@ -10,7 +10,9 @@ public interface IReviewService: ITransientService
     List<ReviewDto> GetAll(Guid bookId);
     
     ReviewDto GetById(Guid reviewId);
-
+    
+    ReviewDto? GetUserReviewByBook(Guid bookId);
+    
     void Create(CreateReviewDto dto);
     
     void Update(Guid id, UpdateReviewDto dto);

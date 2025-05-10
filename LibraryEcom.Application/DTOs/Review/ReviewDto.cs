@@ -13,4 +13,6 @@ public class ReviewDto
     public DateTime ReviewDate { get; set; }
     
     public UserDto User { get; set; }
+    
+    public bool IsOwnReview { get; set; } 
 }

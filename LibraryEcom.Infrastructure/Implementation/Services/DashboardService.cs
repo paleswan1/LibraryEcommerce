@@ -38,28 +38,34 @@ public class DashboardService(IGenericRepository genericRepository) : IDashboard
 
         var totalBooks = await genericRepository.Get<Book>().CountAsync();
         var availableBooks = await genericRepository.Get<Book>().Where(b => b.IsAvailable).CountAsync();
-        var currentBooks = await genericRepository.Get<Book>().Where(b => b.CreatedAt >= currentStart && b.CreatedAt <= currentEnd).CountAsync();
-        var prevBooks = await genericRepository.Get<Book>().Where(b => b.CreatedAt >= prevStart && b.CreatedAt <= prevEnd).CountAsync();
+        var currentBooks = await genericRepository.Get<Book>()
+            .Where(b => b.CreatedAt >= currentStart && b.CreatedAt <= currentEnd).CountAsync();
+        var prevBooks = await genericRepository.Get<Book>()
+            .Where(b => b.CreatedAt >= prevStart && b.CreatedAt <= prevEnd).CountAsync();
         var bookGrowth = CalculateGrowth(currentBooks, prevBooks);
 
         var totalMembers = await genericRepository.Get<User>().CountAsync();
         var activeMembers = await genericRepository.Get<User>().Where(m => m.IsActive).CountAsync();
-       
+
 
         var totalOrders = await genericRepository.Get<Order>().CountAsync();
-        var currentOrders = await genericRepository.Get<Order>().Where(o => o.CreatedAt >= currentStart && o.CreatedAt <= currentEnd).CountAsync();
-        var prevOrders = await genericRepository.Get<Order>().Where(o => o.CreatedAt >= prevStart && o.CreatedAt <= prevEnd).CountAsync();
+        var currentOrders = await genericRepository.Get<Order>()
+            .Where(o => o.CreatedAt >= currentStart && o.CreatedAt <= currentEnd).CountAsync();
+        var prevOrders = await genericRepository.Get<Order>()
+            .Where(o => o.CreatedAt >= prevStart && o.CreatedAt <= prevEnd).CountAsync();
         var orderGrowth = CalculateGrowth(currentOrders, prevOrders);
 
         var totalReviews = await genericRepository.Get<Review>().CountAsync();
-        var currentReviews = await genericRepository.Get<Review>().Where(r => r.CreatedAt >= currentStart && r.CreatedAt <= currentEnd).CountAsync();
-        var prevReviews = await genericRepository.Get<Review>().Where(r => r.CreatedAt >= prevStart && r.CreatedAt <= prevEnd).CountAsync();
+        var currentReviews = await genericRepository.Get<Review>()
+            .Where(r => r.CreatedAt >= currentStart && r.CreatedAt <= currentEnd).CountAsync();
+        var prevReviews = await genericRepository.Get<Review>()
+            .Where(r => r.CreatedAt >= prevStart && r.CreatedAt <= prevEnd).CountAsync();
         var reviewGrowth = CalculateGrowth(currentReviews, prevReviews);
 
         var recentOrdersQuery = genericRepository.Get<Order>()
             .Include(o => o.User)
             .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Book)
+            .ThenInclude(oi => oi.Book)
             .OrderByDescending(o => o.CreatedAt)
             .Take(5);
 
@@ -105,7 +111,8 @@ public class DashboardService(IGenericRepository genericRepository) : IDashboard
         };
     }
 
-    private static (DateTime currentStart, DateTime currentEnd, DateTime prevStart, DateTime prevEnd) GetPeriodRange(int period)
+    private static (DateTime currentStart, DateTime currentEnd, DateTime prevStart, DateTime prevEnd)
+        GetPeriodRange(int period)
     {
         var today = DateTime.UtcNow;
         return period switch

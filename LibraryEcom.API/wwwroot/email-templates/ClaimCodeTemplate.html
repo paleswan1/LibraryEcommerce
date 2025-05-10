@@ -49,12 +49,20 @@
         <h2>Hello {{FullName}},</h2>
         <p>Thanks for your order at <strong>Bookish</strong>! 🎉</p>
     </div>
+
     <p><strong>Order ID:</strong> {{OrderId}}</p>
+    <p><strong>Member ID:</strong> {{UserId}}</p>
     <p>Your special claim code is:</p>
     <div class="code-box">{{ClaimCode}}</div>
-    <p><strong>Member ID:</strong> {{UserId}}</p>
     <p>This code is valid until: <strong>{{ClaimExpiry}}</strong></p>
-    <p>Please use it before the expiry date to enjoy your benefits.</p>
+
+    <hr style="margin: 20px 0;" />
+
+    <p><strong>Total Amount:</strong> Rs. {{TotalAmount}}</p>
+    <p><strong>Total Discount Applied:</strong> Rs. {{DiscountedAmount}}</p>
+
+    <p>Please use your claim code before the expiry date to enjoy your benefits.</p>
+
     <div class="footer">
         <p>&copy; 2025 Bookish. All rights reserved.</p>
     </div>

@@ -14,7 +14,7 @@ public class ProfileService(
     ICurrentUserService currentUserService,
     IFileService fileService) : IProfileService
 {
-    private const string UsersImagesFilePath = "Uploads/Users"; // or get from config/constants
+    private const string UsersImagesFilePath = "Uploads/Users"; 
 
     public GetProfileDto GetUserProfile()
     {

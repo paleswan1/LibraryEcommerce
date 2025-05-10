@@ -46,7 +46,6 @@ public class CartService(
                     Language = book.Language,
                     IsAvailable = book.IsAvailable,
                     CoverImage = book.CoverImage
-
                 },
                 Quantity = cart.Quantity
             };
@@ -82,7 +81,6 @@ public class CartService(
                     Language = book.Language,
                     IsAvailable = book.IsAvailable,
                     CoverImage = book.CoverImage
-
                 },
                 Quantity = cart.Quantity
             };
@@ -126,7 +124,8 @@ public class CartService(
         var book = genericRepository.GetById<Book>(dto.BookId)
                    ?? throw new NotFoundException("Book not found");
 
-        var existingCart = genericRepository.Get<Cart>(x => x.UserId == userId && x.BookId == dto.BookId).FirstOrDefault();
+        var existingCart = genericRepository.Get<Cart>(x => x.UserId == userId && x.BookId == dto.BookId)
+            .FirstOrDefault();
 
         if (existingCart != null)
         {
@@ -190,105 +189,106 @@ public class CartService(
     }
 
     public Guid PlaceOrderFromCart()
-{
-    var userId = currentUserService.GetUserId;
-
-    var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
-
-    if (!cartItems.Any())
-        throw new BadRequestException("Cart is empty.", new[] { "No items found in the cart." });
-
-    List<OrderItem> orderItems = new();
-    decimal subtotal = 0;
-
-    try
     {
-        foreach (var cart in cartItems)
+        var userId = currentUserService.GetUserId;
+
+        var cartItems = genericRepository.Get<Cart>(x => x.UserId == userId).ToList();
+
+        if (!cartItems.Any())
+            throw new BadRequestException("Cart is empty.", new[] { "No items found in the cart." });
+
+        List<OrderItem> orderItems = new();
+        decimal subtotal = 0;
+
+        try
         {
-            var book = genericRepository.GetById<Book>(cart.BookId)
-                       ?? throw new NotFoundException($"Book not found for BookId: {cart.BookId}");
-
-            subtotal += book.BasePrice * cart.Quantity;
-
-            orderItems.Add(new OrderItem
+            foreach (var cart in cartItems)
             {
-                Id = Guid.NewGuid(),
-                BookId = book.Id,
-                Quantity = cart.Quantity,
-                UnitPrice = book.BasePrice
-                // OrderId will be set after order is created
-            });
+                var book = genericRepository.GetById<Book>(cart.BookId)
+                           ?? throw new NotFoundException($"Book not found for BookId: {cart.BookId}");
+
+                subtotal += book.BasePrice * cart.Quantity;
+
+                orderItems.Add(new OrderItem
+                {
+                    Id = Guid.NewGuid(),
+                    BookId = book.Id,
+                    Quantity = cart.Quantity,
+                    UnitPrice = book.BasePrice
+                    // OrderId will be set after order is created
+                });
+            }
         }
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("Error preparing order items: " + (ex.InnerException?.Message ?? ex.Message));
-    }
-
-    // Apply discount rules
-    decimal discount = 0;
-    int totalBooksOrdered = cartItems.Sum(x => x.Quantity);
-    if (totalBooksOrdered >= 5)
-    {
-        discount += subtotal * 0.05m;
-    }
-
-    int pastOrdersCount = genericRepository.Get<Order>(x => x.UserId == userId).Count();
-    if (pastOrdersCount >= 10)
-    {
-        discount += subtotal * 0.10m;
-    }
-
-    decimal total = subtotal - discount;
-
-    var order = new Order
-    {
-        Id = Guid.NewGuid(),
-        UserId = userId,
-        OrderDate = DateTime.UtcNow,
-        Status = "Pending",
-        Subtotal = subtotal,
-        DiscountAmount = discount,
-        LoyaltyDiscountAmount = 0,
-        TotalAmount = total,
-        IsClaimed = false
-    };
-
-    try
-    {
-        // Save order
-        genericRepository.Insert(order);
-
-        // Link and save each order item
-        foreach (var item in orderItems)
+        catch (Exception ex)
         {
-            item.OrderId = order.Id;
-            genericRepository.Insert(item);
+            throw new Exception("Error preparing order items: " + (ex.InnerException?.Message ?? ex.Message));
         }
 
-        // Clear the cart
-        genericRepository.RemoveMultipleEntity(cartItems);
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("Failed to place order: " + (ex.InnerException?.Message ?? ex.Message));
-    }
+        // Apply discount rules
+        decimal discount = 0;
+        int totalBooksOrdered = cartItems.Sum(x => x.Quantity);
+        if (totalBooksOrdered >= 5)
+        {
+            discount += subtotal * 0.05m;
+        }
 
-    return order.Id;
-}
+        int pastOrdersCount = genericRepository.Get<Order>(x => x.UserId == userId).Count();
+        if (pastOrdersCount >= 10)
+        {
+            discount += subtotal * 0.10m;
+        }
+
+        decimal total = subtotal - discount;
+
+        var order = new Order
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            OrderDate = DateTime.UtcNow,
+            Status = "Pending",
+            Subtotal = subtotal,
+            DiscountAmount = discount,
+            LoyaltyDiscountAmount = 0,
+            TotalAmount = total,
+            IsClaimed = false
+        };
+
+        try
+        {
+            // Save order
+            genericRepository.Insert(order);
+
+            // Link and save each order item
+            foreach (var item in orderItems)
+            {
+                item.OrderId = order.Id;
+                genericRepository.Insert(item);
+            }
+
+            // Clear the cart
+            genericRepository.RemoveMultipleEntity(cartItems);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to place order: " + (ex.InnerException?.Message ?? ex.Message));
+        }
+
+        return order.Id;
+    }
 
 
     public void CancelOrder(Guid orderId)
     {
         var order = genericRepository.GetById<Order>(orderId)
-                     ?? throw new NotFoundException("Order not found");
+                    ?? throw new NotFoundException("Order not found");
 
         if (order.Status != "Pending")
-            throw new BadRequestException("Only pending orders can be cancelled.", new[] { "The order cannot be cancelled because it is not in 'Pending' status." });
+            throw new BadRequestException("Only pending orders can be cancelled.",
+                new[] { "The order cannot be cancelled because it is not in 'Pending' status." });
 
         genericRepository.Delete(order);
     }
-    
+
     public void ClearCart()
     {
         var userId = currentUserService.GetUserId;
@@ -300,5 +300,4 @@ public class CartService(
             genericRepository.Delete(item);
         }
     }
-
 }

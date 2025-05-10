@@ -1,3 +1,4 @@
+using LibraryEcom.Application.Common.User;
 using LibraryEcom.Application.DTOs.Review;
 using LibraryEcom.Application.DTOs.User;
 using LibraryEcom.Application.Exceptions;
@@ -8,25 +9,31 @@ using LibraryEcom.Domain.Entities.Identity;
 
 namespace LibraryEcom.Infrastructure.Implementation.Services;
 
-public class ReviewService(IGenericRepository genericRepository): IReviewService
+public class ReviewService(IGenericRepository genericRepository,
+    ICurrentUserService currentUserService): IReviewService
 {
     public List<ReviewDto> GetAll(Guid bookId, int pageNumber, int pageSize, out int rowCount, string? search = null)
     {
+        var currentUserId = currentUserService.GetUserId;
+
         var reviews = genericRepository.GetPagedResult<Review>(pageNumber, pageSize, out rowCount,
-            x => x.BookId == bookId ).ToList(); 
-        
+            x => x.BookId == bookId).ToList();
+
         var reviewDtos = new List<ReviewDto>();
 
         foreach (var review in reviews)
         {
-            var user = genericRepository.GetById<User>(review.UserId) ?? throw new NotFoundException("User not found.");
+            var user = genericRepository.GetById<User>(review.UserId)
+                       ?? throw new NotFoundException("User not found.");
+
             reviewDtos.Add(new ReviewDto
             {
                 Id = review.Id,
                 Rating = review.Rating,
                 Comment = review.Comment,
                 ReviewDate = review.ReviewDate,
-                User = new UserDto()
+                IsOwnReview = currentUserId == review.UserId, // ✅ Ownership check
+                User = new UserDto
                 {
                     Id = user.Id,
                     Address = user.Address,
@@ -35,12 +42,12 @@ public class ReviewService(IGenericRepository genericRepository): IReviewService
                     EmailAddress = user.Email,
                     IsActive = user.IsActive,
                     RegisteredDate = user.RegisteredDate,
-                    ImageURL = user.ImageURL,
+                    ImageURL = user.ImageURL
                 }
             });
         }
 
-        return reviewDtos;    
+        return reviewDtos;
     }
 
     public List<ReviewDto> GetAll(Guid bookId)

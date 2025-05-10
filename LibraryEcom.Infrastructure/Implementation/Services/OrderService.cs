@@ -27,7 +27,6 @@ public class OrderService(
 
 
 {
-
     public List<OrderDto> GetAll(int pageNumber, int pageSize, out int rowCount, string? search = null)
     {
         var orders = genericRepository.GetPagedResult<Order>(
@@ -174,8 +173,9 @@ public class OrderService(
             .Replace("{{OrderId}}", order.Id.ToString())
             .Replace("{{ClaimCode}}", claimCode)
             .Replace("{{ClaimExpiry}}", order.ClaimExpiry?.ToString("yyyy-MM-dd") ?? "")
-            .Replace("{{UserId}}", user.Id.ToString());
-
+            .Replace("{{UserId}}", user.Id.ToString())
+            .Replace("{{TotalAmount}}", order.TotalAmount.ToString("F2"))
+            .Replace("{{DiscountedAmount}}", (order.DiscountAmount + order.LoyaltyDiscountAmount).ToString("F2"));
 
 
         if (string.IsNullOrWhiteSpace(user.Email))
@@ -195,7 +195,7 @@ public class OrderService(
         };
 
         await emailService.SendEmail(emailDto);
-        
+
         var orderedBookTitles = orderItems
             .Select(i => genericRepository.GetById<Book>(i.BookId)?.Title)
             .Where(t => !string.IsNullOrWhiteSpace(t))
@@ -250,13 +250,13 @@ public class OrderService(
 
         return order.Id;
     }
-    
-public void CancelOrder(Guid orderId)
+
+    public void CancelOrder(Guid orderId)
     {
         var userId = currentUserService.GetUserId;
 
         var order = genericRepository.GetById<Order>(orderId)
-                     ?? throw new NotFoundException("Order not found");
+                    ?? throw new NotFoundException("Order not found");
 
         if (order.UserId != userId)
             throw new UnauthorizedAccessException("You are not authorized to cancel this order.");
@@ -265,7 +265,8 @@ public void CancelOrder(Guid orderId)
             throw new BadRequestException("Order status is invalid.", new[] { "Status cannot be empty or null." });
 
         if (order.Status != "Pending")
-            throw new BadRequestException("Only pending orders can be cancelled.", new[] { "The order cannot be cancelled because it is not in 'Pending' status." });
+            throw new BadRequestException("Only pending orders can be cancelled.",
+                new[] { "The order cannot be cancelled because it is not in 'Pending' status." });
 
         genericRepository.Delete(order);
     }
@@ -297,22 +298,24 @@ public void CancelOrder(Guid orderId)
                 BookId = i.BookId,
                 Quantity = i.Quantity,
                 UnitPrice = i.UnitPrice,
-                Book = book == null ? null : new BookDto
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    Genre = book.Genre,
-                    CoverImage = book.CoverImage,
-                    BasePrice = book.BasePrice,
-                    PublisherName = book.PublisherName,
-                    ISBN = book.ISBN,
-                    Language = book.Language,
-                    Description = book.Description,
-                    BookFormat = book.BookFormat,
-                    PageCount = book.PageCount,
-                    PublicationDate = book.PublicationDate,
-                    IsAvailable = book.IsAvailable
-                }
+                Book = book == null
+                    ? null
+                    : new BookDto
+                    {
+                        Id = book.Id,
+                        Title = book.Title,
+                        Genre = book.Genre,
+                        CoverImage = book.CoverImage,
+                        BasePrice = book.BasePrice,
+                        PublisherName = book.PublisherName,
+                        ISBN = book.ISBN,
+                        Language = book.Language,
+                        Description = book.Description,
+                        BookFormat = book.BookFormat,
+                        PageCount = book.PageCount,
+                        PublicationDate = book.PublicationDate,
+                        IsAvailable = book.IsAvailable
+                    }
             };
         }).ToList();
 
@@ -331,8 +334,6 @@ public void CancelOrder(Guid orderId)
             ClaimExpiry = o.ClaimExpiry,
             IsClaimed = o.IsClaimed,
             Items = items
-            
         };
     }
-
 }

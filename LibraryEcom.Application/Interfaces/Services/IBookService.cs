@@ -1,5 +1,6 @@
 using LibraryEcom.Application.Common.Service;
 using LibraryEcom.Application.DTOs.Book;
+using LibraryEcom.Domain.Common.Enum;
 using LibraryEcom.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -24,5 +25,8 @@ public interface IBookService: ITransientService
     void Delete(Guid id);
     
     PagedBookResponseDto GetBooksByGenre(string? genre, int pageNumber, int pageSize, string? search);
+    
+    List<BookCategoryDto> GetBooksByCategory(BookCategory category);
+
 
 }

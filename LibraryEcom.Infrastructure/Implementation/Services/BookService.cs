@@ -303,8 +303,40 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             Biography = ba.Author.Biography,
             BirthDate = ba.Author.BirthDate
         }).ToList();
+        
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
+        
+        var validDiscount = genericRepository.GetFirstOrDefault<Discount>(
+            x => x.BookId == book.Id && x.StartDate <= today && x.EndDate >= today
+        );
+        
+        var allDiscounts = genericRepository.Get<Discount>(d => d.BookId == book.Id).ToList()
+            .Select(d => new DiscountDto
+            {
+                Id = d.Id,
+                DiscountPercentage = d.DiscountPercentage,
+                StartDate = d.StartDate,
+                EndDate = d.EndDate,
+                BookId = d.BookId,
+                IsSaleFlag = d.IsSaleFlag
+            }).ToList();
 
+        DiscountDto discountDto = null;
+
+        if (validDiscount != null)
+        {
+            discountDto = new DiscountDto
+            {
+                Id = validDiscount.Id,
+                BookId = validDiscount.BookId,
+                DiscountPercentage = validDiscount.DiscountPercentage,
+                StartDate = validDiscount.StartDate,
+                EndDate = validDiscount.EndDate,
+                IsSaleFlag = validDiscount.IsSaleFlag,
+            };
+        }
+        
         return new BookDto
         {
             Id = book.Id,
@@ -320,19 +352,9 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             CoverImage = book.CoverImage,
             Language = book.Language,
             IsAvailable = book.IsAvailable,
-            // Discount = book.Discount != null
-            //     ? new DiscountDto
-            //     {
-            //         Id = book.Discount.Id,
-            //         BookId = book.Discount.BookId,
-            //         DiscountPercentage = book.Discount.DiscountPercentage,
-            //         StartDate = book.Discount.StartDate,
-            //         EndDate = book.Discount.EndDate,
-            //         IsActive = book.Discount.IsActive,
-            //         IsSaleFlag = book.Discount.IsSaleFlag
-            //     }
-            //     : null,
-            Authors = authors
+            Discount = allDiscounts,
+            Authors = authors,
+            ValidatedDiscount = discountDto,
         };
     }
 

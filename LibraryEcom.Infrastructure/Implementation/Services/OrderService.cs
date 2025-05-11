@@ -11,6 +11,7 @@ using MailKit;
 using System.Globalization;
 using LibraryEcom.Application.DTOs.Book;
 using LibraryEcom.Application.DTOs.OrderItem;
+using LibraryEcom.Application.DTOs.Review;
 using LibraryEcom.Application.Hubs;
 using LibraryEcom.Domain.Common.Enum;
 using Microsoft.AspNetCore.Hosting;
@@ -74,6 +75,7 @@ public class OrderService(
             ClaimCode = dto.ClaimCode,
             ClaimExpiry = dto.ClaimExpiry,
             IsClaimed = false,
+
         };
 
         genericRepository.Insert(order);
@@ -289,9 +291,21 @@ public class OrderService(
         var bookIds = orderItems.Select(i => i.BookId).Distinct().ToList();
         var books = genericRepository.Get<Book>(x => bookIds.Contains(x.Id)).ToList();
 
+        var reviews = genericRepository.Get<Review>(r => bookIds.Contains(r.BookId)).ToList();
+
         var items = orderItems.Select(i =>
         {
             var book = books.FirstOrDefault(b => b.Id == i.BookId);
+            var bookReviews = reviews
+                .Where(r => r.BookId == i.BookId)
+                .Select(r => new ReviewDto
+                {
+                    Id = r.Id,
+                    Comment = r.Comment,
+                    Rating = r.Rating,
+                    ReviewDate = r.ReviewDate
+                }).ToList();
+
             return new OrderItemDto
             {
                 Id = i.Id,
@@ -314,7 +328,8 @@ public class OrderService(
                         BookFormat = book.BookFormat,
                         PageCount = book.PageCount,
                         PublicationDate = book.PublicationDate,
-                        IsAvailable = book.IsAvailable
+                        IsAvailable = book.IsAvailable,
+                        Reviews = bookReviews
                     }
             };
         }).ToList();

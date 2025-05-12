@@ -111,7 +111,10 @@ public class BookService(IGenericRepository genericRepository) : IBookService
                 Discount = allDiscounts,
                 Authors = authors,
                 Reviews = bookReviews,
-                ValidatedDiscount = discountDto
+                ValidatedDiscount = discountDto,
+                IsBestSeller = book.IsBestSeller,
+                IsAwarded = book.IsAwarded,
+                isFeatured = book.isFeatured,
             });
         }
 
@@ -205,7 +208,10 @@ public class BookService(IGenericRepository genericRepository) : IBookService
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
                 Discount = activeDiscounts,
-                Authors = authors
+                Authors = authors,
+                IsBestSeller = book.IsBestSeller,
+                IsAwarded = book.IsAwarded,
+                isFeatured = book.isFeatured,
             });
         }
 
@@ -280,7 +286,10 @@ public class BookService(IGenericRepository genericRepository) : IBookService
                 Language = book.Language,
                 IsAvailable = book.IsAvailable,
                 Discount = activeDiscounts,
-                Authors = authors
+                Authors = authors,
+                IsBestSeller = book.IsBestSeller,
+                IsAwarded = book.IsAwarded,
+                isFeatured = book.isFeatured,
             });
         }
 
@@ -355,6 +364,9 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             Discount = allDiscounts,
             Authors = authors,
             ValidatedDiscount = discountDto,
+            IsBestSeller = book.IsBestSeller,
+            IsAwarded = book.IsAwarded,
+            isFeatured = book.isFeatured
         };
     }
 
@@ -387,7 +399,10 @@ public class BookService(IGenericRepository genericRepository) : IBookService
             {
                 BookId = bookId,
                 AuthorId = x.Id
-            }).ToList()
+            }).ToList(),
+            IsBestSeller = dto.IsBestSeller,
+            IsAwarded = dto.IsAwarded,
+            isFeatured = dto.isFeatured
         };
 
         try
@@ -458,6 +473,9 @@ public class BookService(IGenericRepository genericRepository) : IBookService
         book.PageCount = dto.PageCount;
         book.Language = dto.Language;
         book.IsAvailable = dto.IsAvailable;
+        book.IsBestSeller = dto.IsBestSeller;
+        book.IsAwarded = dto.IsAwarded;
+        book.isFeatured = dto.isFeatured;
 
         if (dto.AuthorIds != null && dto.AuthorIds.Any())
         {

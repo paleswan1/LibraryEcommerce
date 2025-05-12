@@ -24,6 +24,12 @@ public class UpdateBookDto
     public decimal BasePrice { get; set; }
 
     public int PageCount { get; set; }
+    
+    public bool IsAwarded { get; set; }
+    
+    public bool isFeatured { get; set; }
+    
+    public bool IsBestSeller { get; set; }
 
     public Language Language { get; set; }
 

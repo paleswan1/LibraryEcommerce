@@ -34,6 +34,12 @@ public class CreateBookDto
     public bool IsAvailable { get; set; }
     
     public IFormFile? CoverImage { get; set; }
+    
+    public bool IsAwarded { get; set; }
+    
+    public bool isFeatured { get; set; }
+    
+    public bool IsBestSeller { get; set; }
 
     
     // public BookAuthor Author { get; set; }

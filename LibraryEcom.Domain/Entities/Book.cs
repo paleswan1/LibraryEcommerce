@@ -31,6 +31,12 @@ public class Book: BaseEntity<Guid>
     
     public string? CoverImage { get; set; }
     
+    public bool IsAwarded { get; set; }
+    
+    public bool isFeatured { get; set; }
+    
+    public bool IsBestSeller { get; set; }
+    
     public virtual ICollection<Review> Reviews { get; set; } = [];
 
     

@@ -35,6 +35,12 @@ public class BookDto
     
     public string? CoverImage { get; set; }
     
+    public bool IsAwarded { get; set; }
+    
+    public bool isFeatured { get; set; }
+    
+    public bool IsBestSeller { get; set; }
+    
     public List<DiscountDto> Discount { get; set; } = new List<DiscountDto>();
     
     public DiscountDto ValidatedDiscount { get; set; }

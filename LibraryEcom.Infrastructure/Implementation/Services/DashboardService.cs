@@ -4,6 +4,8 @@ using LibraryEcom.Application.Interfaces.Services;
 using LibraryEcom.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using LibraryEcom.Application.DTOs.Review;
+using LibraryEcom.Application.DTOs.User;
 using LibraryEcom.Domain.Common.Property;
 using LibraryEcom.Domain.Entities.Identity;
 
@@ -31,7 +33,7 @@ public class DashboardService(IGenericRepository genericRepository) : IDashboard
 
         return groupedOrders;
     }
-
+    
     public async Task<GetLibraryDashboardOverviewDto> GetLibraryDashboardOverviewAsync(int period)
     {
         var (currentStart, currentEnd, prevStart, prevEnd) = GetPeriodRange(period);
@@ -46,6 +48,26 @@ public class DashboardService(IGenericRepository genericRepository) : IDashboard
 
         var totalMembers = await genericRepository.Get<User>().CountAsync();
         var activeMembers = await genericRepository.Get<User>().Where(m => m.IsActive).CountAsync();
+        
+        var bookReviews = await genericRepository.Get<Review>()
+            .Include(r => r.Book) 
+            .Include(r => r.User)
+            .Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                Comment = r.Comment,
+                Rating = r.Rating,
+                ReviewDate = r.ReviewDate,
+                BookTitle = r.Book.Title, 
+                User = new UserDto
+                {
+                    Name = r.User.UserName,
+                    EmailAddress = r.User.Email,
+                }
+            })
+            .ToListAsync();
+
+
 
 
         var totalOrders = await genericRepository.Get<Order>().CountAsync();
@@ -106,8 +128,11 @@ public class DashboardService(IGenericRepository genericRepository) : IDashboard
             OrderGrowthPercent = orderGrowth,
             TotalReviews = totalReviews,
             ReviewGrowthPercent = reviewGrowth,
+            Reviews = bookReviews, 
             RecentOrders = recentOrders,
-            MonthlyOrders = monthlyOrders
+            MonthlyOrders = monthlyOrders,
+            
+            
         };
     }
 

@@ -6,6 +6,8 @@ public class DiscountDto
     
     public Guid BookId { get; set; }
     
+    public string BookTitle { get; set; }
+    
     public decimal DiscountPercentage { get; set; }
     
     public DateOnly StartDate { get; set; }

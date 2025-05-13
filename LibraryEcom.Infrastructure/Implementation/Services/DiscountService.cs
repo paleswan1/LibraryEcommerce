@@ -15,7 +15,12 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
                 x => string.IsNullOrEmpty(search) || x.Book.Title.ToLower().Contains(search.ToLower()))
             .ToList();
 
+        var bookIds = discounts.Select(d => d.BookId).Distinct().ToList();
+
         var discountDtos = new List<DiscountDto>();
+        
+        var books = genericRepository.Get<Book>(b => bookIds.Contains(b.Id)).ToList();
+
 
         foreach (var discount in discounts)
         {
@@ -25,7 +30,9 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
                 BookId = discount.BookId,
                 DiscountPercentage = discount.DiscountPercentage,
                 StartDate = discount.StartDate,
-                IsSaleFlag = discount.IsSaleFlag
+                IsSaleFlag = discount.IsSaleFlag,
+                EndDate = discount.EndDate,
+                BookTitle = books.FirstOrDefault(b => b.Id == discount.BookId)?.Title,
             });
         }
 
@@ -44,7 +51,8 @@ public class DiscountService(IGenericRepository genericRepository) : IDiscountSe
             DiscountPercentage = discount.DiscountPercentage,
             StartDate = discount.StartDate,
             EndDate = discount.EndDate,
-            IsSaleFlag = discount.IsSaleFlag
+            IsSaleFlag = discount.IsSaleFlag,
+            
         };
     }
 

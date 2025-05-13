@@ -12,6 +12,8 @@ public class ReviewDto
 
     public DateTime ReviewDate { get; set; }
     
+    public string BookTitle { get; set; } = string.Empty;
+    
     public UserDto User { get; set; }
     
     public bool IsOwnReview { get; set; } 

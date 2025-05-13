@@ -1,3 +1,5 @@
+using LibraryEcom.Application.DTOs.Review;
+
 namespace LibraryEcom.Application.DTOs.Dashboard;
 
 public class GetLibraryDashboardOverviewDto
@@ -22,6 +24,9 @@ public class GetLibraryDashboardOverviewDto
     // 📝 Reviews
     public int TotalReviews { get; set; }
     public double? ReviewGrowthPercent { get; set; }
+    
+    public List<ReviewDto> Reviews { get; set; } = [];
+
 
     public List<GetRecentOrderDetailsDto> RecentOrders { get; set; } = [];
 

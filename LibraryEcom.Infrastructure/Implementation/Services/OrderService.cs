@@ -292,6 +292,9 @@ public class OrderService(
         var books = genericRepository.Get<Book>(x => bookIds.Contains(x.Id)).ToList();
 
         var reviews = genericRepository.Get<Review>(r => bookIds.Contains(r.BookId)).ToList();
+        
+        var user = genericRepository.GetById<User>(o.UserId);
+
 
         var items = orderItems.Select(i =>
         {
@@ -348,7 +351,15 @@ public class OrderService(
             ClaimCode = o.ClaimCode,
             ClaimExpiry = o.ClaimExpiry,
             IsClaimed = o.IsClaimed,
-            Items = items
+            Items = items,
+            User = user == null ? null : new UserDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                EmailAddress = user.Email,
+                ImageURL = user.ImageURL
+            }
+            
         };
     }
 }

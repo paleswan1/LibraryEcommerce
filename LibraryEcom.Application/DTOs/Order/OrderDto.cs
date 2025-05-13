@@ -32,4 +32,5 @@ public class OrderDto
     public bool IsClaimed { get; set; }
     
     public List<OrderItemDto> Items { get; set; }
+    
 }

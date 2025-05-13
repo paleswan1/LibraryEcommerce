@@ -9,5 +9,6 @@ public interface IDashboardService: ITransientService
     
     Task<GetLibraryDashboardOverviewDto> GetLibraryDashboardOverviewAsync(int period);
 
+    Task<List<GetWeeklyOrderDto>> GetWeeklyOrdersAsync(int numberOfWeeks);
 
 }

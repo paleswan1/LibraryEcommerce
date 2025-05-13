@@ -24,12 +24,16 @@ public class GetLibraryDashboardOverviewDto
     // 📝 Reviews
     public int TotalReviews { get; set; }
     public double? ReviewGrowthPercent { get; set; }
-    
-    public List<ReviewDto> Reviews { get; set; } = [];
 
+    // 📋 Review List
+    public List<ReviewDto> Reviews { get; set; } = new();
 
-    public List<GetRecentOrderDetailsDto> RecentOrders { get; set; } = [];
+    // 🧾 Recent Order Summaries
+    public List<GetRecentOrderDetailsDto> RecentOrders { get; set; } = new();
 
-    // 📈 Monthly stats
-    public List<GetRecentOrderDto> MonthlyOrders { get; set; } = [];
+    // 📈 Monthly Orders
+    public List<GetRecentOrderDto> MonthlyOrders { get; set; } = new();
+
+    // 📉 Weekly Orders
+    public List<GetWeeklyOrderDto> WeeklyOrders { get; set; } = new();
 }

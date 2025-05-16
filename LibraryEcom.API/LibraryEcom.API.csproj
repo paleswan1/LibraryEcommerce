@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>LibraryCom</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.13"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.13">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LibraryEcom.Application\LibraryEcom.Application.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Domain\LibraryEcom.Domain.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Helper\LibraryEcom.Helper.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Identity\LibraryEcom.Identity.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Infrastructure\LibraryEcom.Infrastructure.csproj" />
+      <ProjectReference Include="..\LibraryEcom.Migrators.PostgreSQL\LibraryEcom.Migrators.PostgreSQL.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <DependentUpon>appsettings.json</DependentUpon>
+      </Content>
+    </ItemGroup>
+
+<!--    <ItemGroup>-->
+<!--      <Content Include="wwwroot\email-templates\OrderFulfilledTemplate.html" />-->
+<!--    </ItemGroup>-->
+
+<!--    <ItemGroup>-->
+<!--      <Content Include="wwwroot\email-templates\ClaimCodeTemplate.html" />-->
+<!--    </ItemGroup>-->
+
+<!--    <ItemGroup>-->
+<!--      <Content Include="wwwroot\email-templates\SelfRegistration.html" />-->
+<!--    </ItemGroup>-->
+
+</Project>
